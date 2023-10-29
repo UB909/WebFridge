@@ -1,0 +1,285 @@
+<!DOCTYPE html
+  PUBLIC "-//W3C//Dtd XHTML 1.0 Transitional//EN" "http://www.w3.org/tr/xhtml1/Dtd/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
+
+  <link rel="stylesheet" href="css/w3.css">
+  <link rel="stylesheet" href="css/fridge/itemList.css">
+  <link rel="stylesheet" href="css/fridge/itemView.css">
+  <link rel="stylesheet" href="css/fridge/main.css">
+  <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
+
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+
+  <script src="js/fridge/Category.js"></script>
+  <script src="js/fridge/Entry.js"></script>
+  <script src="js/fridge/Item.js"></script>
+  <script src="js/fridge/Location.js"></script>
+</head>
+<body>
+  <div id="context-menu" class="context-menuC" hidden>
+    <div class="w3-bar-block w3-border">
+      <button id="contextEdit" class="w3-bar-item w3-button" onclick="contextMenuEdit()">Bearbeiten</button>
+      <button id="contextDelete" class="w3-bar-item w3-button" onclick="contextMenuDelete()">Löschen</button>
+    </div>
+  </div>
+  
+  <div class="w3-top w3-xlarge">
+    <!-- top must be outside for the dropdowns to work-->
+    <div id="topBar" class="w3-bar w3-grey" style="overflow:hidden;">
+      <a class="w3-bar-item w3-button w3-xxlarge" href="index.html"><i class="glyphicon glyphicon-home"></i></a>
+      
+      <button id="category_-1" class="w3-bar-item w3-button" onClick="Category.show(-1)">Alle</button>
+      <div id="categories"></div>
+
+      <div class="w3-dropdown-hover w3-right">
+        <button class="w3-button">+</button>
+        <div class="w3-dropdown-content w3-bar-block w3-border" style="right:0">
+          <button id="newItemShowDialog" class="w3-btton w3-bar-item">Gericht</button>
+          <button id="newCategoryShowDialog" class="w3-button w3-bar-item">Kategorie</button>
+          <button id="newLocationShowDialog" class="w3-button w3-bar-item">Ort</button>
+        </div>
+      </div>
+
+      <div class="w3-dropdown-hover w3-right">
+        <button class="w3-button w3-grey">Orte</button>
+        <div id="locations" class="w3-dropdown-content w3-bar-block w3-border" style="right:0"></div>
+      </div>
+
+      <button class="w3-button w3-right" onclick="updateData()">Refresh</button>
+    </div>
+  </div>
+
+  <!-- !PAGE CONTENT! -->
+  <div id="itemContainer" class="w3-main w3-padding mainContainer"></div>
+
+  <div id="itemView" class="w3-main w3-padding mainContainer hidden">
+    <div id="itemViewHeader">
+      <div id="itemViewImgContainer" class="w3-left">
+        <img id="itemViewImg" class="itemImg" src="php/fridge/getImage.php?id=18">
+      </div>
+      <div id="itemViewTitle" class="w3-xxxlarge"></div>
+    </div>
+    <div id="itemViewLocations"></div>
+  </div>
+
+
+
+  <!-- ! New Dialogs ! -->
+  <div id="newCategoryDialog" class="w3-modal">
+    <div class="w3-modal-content w3-animate-zoom" style="max-width:400px">
+      <header class="w3-container w3-green">
+        <h3>Neue Kategorie</h3>
+      </header>
+
+      <form id="newCategoryDialogForm" action="php/fridge/create.php" method="post">
+        <input name="type" type="hidden" value="category">
+        <div class="w3-container">
+          <div class="w3-section">
+            <label><b>Name</b></label>
+            <input id="newCategoryDialogName" name="name" class="w3-input w3-border w3-margin-bottom" type="text"
+              placeholder="Name" required>
+          </div>
+        </div>
+
+        <div class="w3-container w3-border-top w3-padding-16 w3-light-grey w3-center">
+          <button id="newCategoryAdd" class="w3-button w3-red" type="submit">Hinzufügen</button>
+          <button id="newCategoryCancel" class="w3-button w3-red">Abbrechen</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div id="newLocationDialog" class="w3-modal">
+    <div class="w3-modal-content w3-animate-zoom" style="max-width:400px">
+      <header class="w3-container w3-green">
+        <h3>Neuer Ort</h3>
+      </header>
+
+      <form id="newLocationDialogForm" action="php/fridge/create.php" method="post">
+        <input name="type" type="hidden" value="location">
+        <div class="w3-container">
+          <div class="w3-section">
+            <label><b>Name</b></label>
+            <input id="newLocationDialogName" name="name" class="w3-input w3-border w3-margin-bottom" type="text"
+              placeholder="Name" required>
+          </div>
+        </div>
+
+        <div class="w3-container w3-border-top w3-padding-16 w3-light-grey w3-center">
+          <button id="newLocationAdd" class="w3-button w3-red" type="submit">Hinzufügen</button>
+          <button id="newLocationCancel" class="w3-button w3-red">Abbrechen</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div id="newItemDialog" class="w3-modal">
+    <div class="w3-modal-content w3-animate-zoom" style="max-width:400px">
+      <header class="w3-container w3-green">
+        <h3>Neues Gericht</h3>
+      </header>
+
+      <form id="newItemDialogForm" action="php/fridge/create.php" method="post">
+        <input name="type" type="hidden" value="item">
+        <div class="w3-container">
+          <div class="w3-section">
+            <label><b>Name</b></label>
+            <input id="newItemDialogName" name="name" class="w3-input w3-border w3-margin-bottom" type="text"
+              placeholder="Name" required>
+
+            <label><b>Kategorie</b></label>
+            <select id="newItemDialogCategory" name="category_id" class="w3-select w3-border w3-margin-bottom">
+              <option value="" disabled selected>Kategorie auswählen</option>
+            </select>
+
+            <label><b>Bild</b></label>
+            <br>
+            <label for="newItemDialogFile" id="newItemDialogFileLabel"
+              class="w3-button w3-border w3-margin-bottom w3-light-grey" style="width: 100%;">Bild auswählen</label>
+            <input id="newItemDialogFile" name="image" type="file" hidden />
+          </div>
+        </div>
+        <div class="w3-container w3-border-top w3-padding-16 w3-light-grey w3-center">
+          <button id="newItemAdd" class="w3-button w3-red" type="submit">Hinzufügen</button>
+          <button id="newItemCancel" class="w3-button w3-red">Abbrechen</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  
+
+  <!-- ! Edit Dialogs ! -->
+  <div id="editCategoryDialog" class="w3-modal">
+    <div class="w3-modal-content w3-animate-zoom" style="max-width:400px">
+      <header class="w3-container w3-green">
+        <h3>Kategorie Bearbeiten</h3>
+      </header>
+
+      <form id="editCategoryDialogForm" action="php/fridge/update.php" method="post">
+        <input name="type" type="hidden" value="category">
+        <div class="w3-container">
+          <div class="w3-section">
+            <input id="editCategoryDialogId" name="id" type="hidden">
+            <label><b>Name</b></label>
+            <input id="editCategoryDialogName" name="name" class="w3-input w3-border w3-margin-bottom" type="text" placeholder="Name" required>
+          </div>
+        </div>
+
+        <div class="w3-container w3-border-top w3-padding-16 w3-light-grey w3-center">
+          <button id="editCategoryUpdate" class="w3-button w3-red" type="submit">Aktualisieren</button>
+          <button id="editCategoryCancel" class="w3-button w3-red">Abbrechen</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div id="editLocationDialog" class="w3-modal">
+    <div class="w3-modal-content w3-animate-zoom" style="max-width:400px">
+      <header class="w3-container w3-green">
+        <h3>Ort Bearbeiten</h3>
+      </header>
+
+      <form id="editLocationDialogForm" action="php/fridge/update.php" method="post">
+        <input name="type" type="hidden" value="location">
+        <div class="w3-container">
+          <div class="w3-section">
+            <input id="editLocationDialogId" name="id" type="hidden">
+            <label><b>Name</b></label>
+            <input id="editLocationDialogName" name="name" class="w3-input w3-border w3-margin-bottom" type="text"
+              placeholder="Name" required>
+          </div>
+        </div>
+
+        <div class="w3-container w3-border-top w3-padding-16 w3-light-grey w3-center">
+          <button id="editLocationUpdate" class="w3-button w3-red" type="submit">Aktualisieren</button>
+          <button id="editLocationCancel" class="w3-button w3-red">Abbrechen</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+  <div id="editItemDialog" class="w3-modal">
+    <div class="w3-modal-content w3-animate-zoom" style="max-width:400px">
+      <header class="w3-container w3-green">
+        <h3>Gericht Bearbeiten</h3>
+      </header>
+
+      <form id="editItemDialogForm" action="php/fridge/update.php" method="post">
+        <input name="type" type="hidden" value="item">
+        <div class="w3-container">
+          <div class="w3-section">
+            <input id="editItemDialogId" name="id" type="hidden">
+            <label><b>Name</b></label>
+            <input id="editItemDialogName" name="name" class="w3-input w3-border w3-margin-bottom" type="text"
+              placeholder="Name" required>
+
+            <label><b>Kategorie</b></label>
+            <select id="editItemDialogCategory" name="category_id" class="w3-select w3-border w3-margin-bottom">
+              <option value="" disabled selected>Kategorie auswählen</option>
+            </select>
+
+            <label><b>Bild</b></label>
+            <br>
+            <label for="editItemDialogFile" id="editItemDialogFileLabel"
+              class="w3-button w3-border w3-margin-bottom w3-light-grey" style="width: 100%;">Neues Bild auswählen</label>
+            <input id="editItemDialogFile" name="image" type="file" hidden/>
+          </div>
+        </div>
+        <div class="w3-container w3-border-top w3-padding-16 w3-light-grey w3-center">
+          <button id="editItemUpdate" class="w3-button w3-red" type="submit">Aktualisieren</button>
+          <button id="editItemCancel" class="w3-button w3-red">Abbrechen</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+
+
+  <!-- ! Delete Dialog ! -->
+  <div id="deleteDialog" class="w3-modal">
+    <div class="w3-modal-content w3-animate-zoom" style="max-width:400px">
+      <header class="w3-container w3-green">
+        <h3 id="deleteDialogMsg">Delete XXX?</h3>
+      </header>
+
+      <form id="deleteDialogForm" action="php/fridge/delete.php" method="post">
+            <input id="deleteDialogId" name="id" type="hidden">
+            <input id="deleteDialogType" name="type" type="hidden">
+
+        <div class="w3-container w3-border-top w3-padding-16 w3-light-grey w3-center">
+          <button id="deleteDialogYes" class="w3-button w3-red" type="submit">Ja</button>
+          <button id="deleteDialogCancel" class="w3-button w3-red">Abbrechen</button>
+        </div>
+      </form>
+    </div>
+  </div>
+
+
+  <script src="js/fridge/main.js"></script>
+  <script src="js/fridge/contextMenu.js"></script>
+  <script src="js/fridge/categoryDlgs.js"></script>
+  <script src="js/fridge/itemDlgs.js"></script>
+  <script src="js/fridge/locationDlgs.js"></script>
+
+
+  <!-- <script>
+    function Sleep(milliseconds) {
+      return new Promise(resolve => setTimeout(resolve, milliseconds));
+    }
+
+    async function test() {
+      await Sleep(500); // Pausiert die Funktion für 3 Sekunden
+      openEditItemDialog(68);
+      // document.getElementById('newItemDialog').style.display = 'block';
+    }
+    test();
+  </script> -->
+</body>
+
+</html>

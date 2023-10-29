@@ -1,0 +1,53 @@
+
+<!DOCTYPE html>
+<html>
+  
+<head>
+  <meta http-equiv="Content-Type" content="text/html; charset=UTF-8" />
+  <meta name="apple-mobile-web-app-capable" content="yes">
+  <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
+
+  <link rel="stylesheet" href="css/w3.css">
+  <link rel="stylesheet" href="css/itemList.css">
+  <link rel="stylesheet" href="css/itemView.css">
+  <link rel="stylesheet" href="css/main.css">
+  <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
+</head>
+
+<body>
+
+  <form id="newItemDialogForm1" action="upload.php" method="post" enctype="multipart/form-data">
+    Select image to upload:
+    <input type="file" name="fileToUpload" id="fileToUpload">
+    <input type="submit" value="Upload Image" name="submit">
+  </form>
+  <form id="newItemDialogForm2" action="upload.php" method="post" enctype="multipart/form-data">
+    Select image to upload:
+    <input type="file" name="fileToUpload" id="fileToUpload">
+    <input type="submit" value="Upload Image" name="submit">
+  </form>
+
+
+<script>
+$(document).on("submit", "form#newItemDialogForm1", function(event)
+{
+    event.preventDefault();
+    $.ajax({
+        url: $(this).attr("action"),
+        type: $(this).attr("method"),
+        dataType: "JSON",
+        data: new FormData(this),
+        processData: false,
+        contentType: false,
+        success: function (data, status)
+        {
+          alert('ping');
+
+        },
+    });        
+});
+
+</script>
+
+</body>
+</html>
