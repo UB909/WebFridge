@@ -60,8 +60,8 @@ class Recipes {
   }
 
   /// create a new dish
-  public function createDish($name, $preparation, $categoryId, $image) {
-    return Dish::create($this->sqlSession, $name, $preparation, $categoryId, $image);
+  public function createDish($name, $preparation, $ingredients, $categoryId, $image) {
+    return Dish::create($this->sqlSession, $name, $preparation, $ingredients, $categoryId, $image);
   }
 
   /// edit a category
@@ -70,8 +70,8 @@ class Recipes {
   }
 
   /// edit a dish
-  public function updateDish($id, $name, $preparation, $categoryId, $image) {
-    return Dish::update($this->sqlSession, $id, $name, $preparation, $categoryId, $image);
+  public function updateDish($id, $name, $preparation, $ingredients, $categoryId, $image) {
+    return Dish::update($this->sqlSession, $id, $name, $preparation, $ingredients, $categoryId, $image);
   }
 
   /// remove a category

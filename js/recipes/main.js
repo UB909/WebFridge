@@ -1,6 +1,6 @@
 
 var lastFilterElement = null;
-var currentItem = null;
+var currentDish = null;
 var lastUpdatedData = 0;
 
 /**
@@ -33,7 +33,7 @@ function addReceivedData(data) {
   data.categories.forEach((dataRow) => {
     var cat = Category.getById(dataRow.id);
     if(cat) {
-      cat.update(dataRow.name);
+      cat.update(dataRow);
       const index = existingIds.indexOf(dataRow.id);
       existingIds.splice(index, 1);
     }
@@ -46,38 +46,38 @@ function addReceivedData(data) {
     Category.getById(id).remove();
   });
 
-  // // parse items and create the HTML elements
-  // var existingIds = [];
-  // Item.items.forEach((item) => {
-  //   existingIds.push(item.id);
-  // });
+  // parse dishes and create the HTML elements
+  var existingIds = [];
+  Dish.dishes.forEach((dish) => {
+    existingIds.push(dish.id);
+  });
   
-  // data.items.forEach((dataRow) => {
-  //   var item = Item.getById(dataRow.id);
-  //   if(item) {
-  //     item.update(dataRow.name, dataRow.categoryId);
-  //     const index = existingIds.indexOf(dataRow.id);
-  //     existingIds.splice(index, 1);
-  //   }
-  //   else {
-  //     Item.addItem(dataRow);
-  //   }
-  // });
+  data.dishes.forEach((dataRow) => {
+    var dish = Dish.getById(dataRow.id);
+    if(dish) {
+      dish.update(dataRow);
+      const index = existingIds.indexOf(dataRow.id);
+      existingIds.splice(index, 1);
+    }
+    else {
+      Dish.addDish(dataRow);
+    }
+  });
 
-  // existingIds.forEach((id) => {
-  //   Item.getById(id).remove();
-  // });
+  existingIds.forEach((id) => {
+    Dish.getById(id).remove();
+  });
 
-  // // parse and count entries and add them to the corresponding item
+  // // parse and count entries and add them to the corresponding dish
   // data.entries.forEach((dataRow) => {
-  //   Item.getById(dataRow.itemId).updateOrAddEntry(dataRow);
+  //   Dish.getById(dataRow.dishId).updateOrAddEntry(dataRow);
   // });
-  // Item.items.forEach((item) => {
-  //   item.updateNumberOfElements();
+  // Dish.dishes.forEach((dish) => {
+  //   dish.updateNumberOfElements();
   // });
 
   Category.sort();
-  // Item.sort();
+  Dish.sort();
 }
 
 $("#deleteDialogCancel").click(function (event) {

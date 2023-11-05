@@ -1,0 +1,19 @@
+#dishImg {
+  width: 25%;
+  top: 60px;
+  position: fixed;
+}
+
+.dishIngredientAmount {
+  font-size: large;
+  padding-left: 10px;
+}
+
+.dishIngredientName {
+  font-size: large;
+  padding-left: 10px;
+}
+
+.dishPreparation {
+  font-size: large;
+}

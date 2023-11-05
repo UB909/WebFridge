@@ -14,7 +14,21 @@ switch($type) {
     $preparation = $_POST["preparation"];
     $categoryId = (int)$_POST["category_id"];
     $image = $_FILES["image"];
-    (new Recipes())->updateDish($id, $name, $preparation, $categoryId, $image);
+    $ingredients = array();
+
+    for($i=0; true; $i++) {
+      if(!array_key_exists("ingredients_amount_" . $i, $_POST)) {
+        break;
+      }
+      
+      $amount = $_POST["ingredients_amount_" . $i];
+      $ing_name = $_POST["ingredients_name_" . $i];
+
+      if(!empty($amount) || !empty($ing_name)) {
+        array_push($ingredients, array("amount" => $amount, "name" => $ing_name));
+      }
+    }
+    (new Recipes())->updateDish($id, $name, $preparation, $ingredients, $categoryId, $image);
     break;
   }
   default:

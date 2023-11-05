@@ -17,12 +17,9 @@ class Category {
     });
 
     $("#categories").empty();
-    $("#newItemDialogCategory").empty();
-    $("#editItemDialogCategory").empty();
+    DlgDish.reloadCategories();
     Category.categories.forEach((category) => {
       $("#categories").append(category.domButton);
-      $("#newItemDialogCategory").append(category.domNewItemDropdown);
-      $("#editItemDialogCategory").append(category.domEditItemDropdown);
     });
   }
 
@@ -56,12 +53,11 @@ class Category {
    */
   static show(id) {
     // go through all items and check if it should be shown
-    Item.items.forEach((item) => {
-      if (item.categoryId == id || id == -1) {
-        item.domFrame[0].classList.remove("hidden");
-        item.domNumTotal[0].innerText = item.numElements;
+    Dish.dishes.forEach((dish) => {
+      if (dish.categoryId == id || id == -1) {
+        dish.domFrame[0].classList.remove("hidden");
       } else {
-        item.domFrame[0].classList.add("hidden");
+        dish.domFrame[0].classList.add("hidden");
       }
     });
 
@@ -72,8 +68,8 @@ class Category {
     lastFilterElement = document.getElementById("category_" + id);
     lastFilterElement.classList.add("w3-green");
 
-    document.getElementById("itemContainer").classList.remove("hidden");
-    document.getElementById("itemView").classList.add("hidden");
+    document.getElementById("dishContainer").classList.remove("hidden");
+    document.getElementById("dishView").classList.add("hidden");
   }
 
   constructor(dataRow) {
@@ -89,16 +85,14 @@ class Category {
       "</button>"
     );
 
-    this.domNewItemDropdown = $('<option value="' + this.id + '">' + this.name + "</option>");
-    this.domEditItemDropdown = $('<option value="' + this.id + '">' + this.name + "</option>");
     addContextMenu(this.domButton[0], "category", this.id);
   }
 
   // updates data of the category
-  update(newName) {
+  update(dataRow) {
     // just update the existing one
-    this.name = newName;
-    this.domButton[0].innerText = newName;
+    this.name = dataRow.name;
+    this.domButton[0].innerText = dataRow.name;
   }
 
   /// removes itself from the DOM

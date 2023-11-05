@@ -8,17 +8,19 @@
   <meta name="viewport" content="width=device-width,initial-scale=1,user-scalable=no">
 
   <link rel="stylesheet" href="css/w3.css">
-  <link rel="stylesheet" href="css/recipes/itemList.css">
-  <link rel="stylesheet" href="css/recipes/itemView.css">
+  <link rel="stylesheet" href="css/recipes/dishOverview.css">
+  <link rel="stylesheet" href="css/recipes/dishView.css">
   <link rel="stylesheet" href="css/recipes/main.css">
   <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css">
 
   <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.5.1/jquery.min.js"></script>
 
   <script src="js/recipes/Category.js"></script>
-  <script src="js/recipes/Entry.js"></script>
-  <script src="js/recipes/Item.js"></script>
+  <script src="js/recipes/Dish.js"></script>
+  <script src="js/recipes/DlgCategory.js"></script>
+  <script src="js/recipes/DlgDish.js"></script>
 </head>
+
 <body>
   <div id="context-menu" class="context-menuC" hidden>
     <div class="w3-bar-block w3-border">
@@ -26,190 +28,137 @@
       <button id="contextDelete" class="w3-bar-item w3-button" onclick="contextMenuDelete()">Löschen</button>
     </div>
   </div>
-  
+
   <div class="w3-top w3-xlarge">
     <!-- top must be outside for the dropdowns to work-->
     <div id="topBar" class="w3-bar w3-grey" style="overflow:hidden;">
       <a class="w3-bar-item w3-button w3-xxlarge" href="index.html"><i class="glyphicon glyphicon-home"></i></a>
-      
+
       <button id="category_-1" class="w3-bar-item w3-button" onClick="Category.show(-1)">Alle</button>
       <div id="categories"></div>
 
       <div class="w3-dropdown-hover w3-right">
         <button class="w3-button">+</button>
         <div class="w3-dropdown-content w3-bar-block w3-border" style="right:0">
-          <button id="newItemShowDialog" class="w3-btton w3-bar-item">Gericht</button>
-          <button id="newCategoryShowDialog" class="w3-button w3-bar-item">Kategorie</button>
+          <button id="dlgDishAdd" class="w3-btton w3-bar-item">Gericht</button>
+          <button id="dlgCategoryAdd" class="w3-button w3-bar-item">Kategorie</button>
         </div>
       </div>
     </div>
   </div>
 
   <!-- !PAGE CONTENT! -->
-  <div id="itemContainer" class="w3-main w3-padding mainContainer"></div>
+  <div id="dishContainer" class="w3-main w3-padding mainContainer"></div>
 
-  <!-- <div id="itemView" class="w3-main w3-padding mainContainer hidden">
-    <div id="itemViewHeader">
-      <div id="itemViewImgContainer" class="w3-left">
-        <img id="itemViewImg" class="itemImg" src="php/recipes/getImage.php?id=18">
+  <div id="dishView" class="w3-main w3-padding mainContainer hidden">
+    <div class="w3-row" style="width: 100%;">
+      <div class="w3-col s9">
+        <h2 id="dishName">GERIHT</h2>
+        <h3>Zutaten</h3>
+        <table id="dishIngredients"></table>
+        <h3>Zubereitung</h3>
+        <div id="dishPreparation" class="dishPreparation"></div>
       </div>
-      <div id="itemViewTitle" class="w3-xxxlarge"></div>
+      <div class="w3-col s3">
+        <img id="dishImg">
+      </div>
     </div>
-    <div id="itemViewLocations"></div>
-  </div> -->
+  </div>
 
 
 
-  <!-- ! New Dialogs ! -->
-  <div id="newCategoryDialog" class="w3-modal">
+  <!-- ! Dialogs ! -->
+  <div id="dlgCategory" class="w3-modal">
     <div class="w3-modal-content w3-animate-zoom" style="max-width:400px">
       <header class="w3-container w3-green">
-        <h3>Neue Kategorie</h3>
+        <h3 id="dlgCategoryLabel">Kategorie</h3>
       </header>
 
-      <form id="newCategoryDialogForm" action="php/recipes/create.php" method="post">
+      <form id="dlgCategoryForm" action="php/recipes/" method="post">
         <input name="type" type="hidden" value="category">
+        <input id="dlgCategoryId" name="id" type="hidden">
 
         <div class="w3-container">
           <div class="w3-section">
             <label><b>Name</b></label>
-            <input id="newCategoryDialogName" name="name" class="w3-input w3-border w3-margin-bottom" type="text"
+            <input id="dlgCategoryName" name="name" class="w3-input w3-border w3-margin-bottom" type="text"
               placeholder="Name" required>
           </div>
         </div>
 
         <div class="w3-container w3-border-top w3-padding-16 w3-light-grey w3-center">
-          <button id="newCategoryAdd" class="w3-button w3-red" type="submit">Hinzufügen</button>
-          <button id="newCategoryCancel" class="w3-button w3-red">Abbrechen</button>
+          <button id="dlgCategorySubmit" class="w3-button w3-red" type="submit">Hinzufügen</button>
+          <button id="dlgCategoryCancel" class="w3-button w3-red">Abbrechen</button>
         </div>
       </form>
     </div>
   </div>
 
-  <div id="newItemDialog" class="w3-modal">
+  <div id="dlgDish" class="w3-modal">
     <div class="w3-modal-content w3-animate-zoom" style="max-width:800px;">
       <header class="w3-container w3-green">
-        <h3>Neues Gericht</h3>
+        <h3 id="dlgDishLabel">Gericht</h3>
       </header>
 
-      <form id="newItemDialogForm"><!-- action="php/recipes/create.php" method="post"-->
+      <form id="dlgDishForm" action="php/recipes/create.php" method="post">
         <input name="type" type="hidden" value="dish">
+        <input id="dlgDishId" name="id" type="hidden">
+
         <div class="w3-container">
           <div class="w3-section">
             <label><b>Name</b></label>
-            <input id="newItemDialogName" name="name" class="w3-input w3-border w3-margin-bottom" type="text"
+            <input id="dlgDishName" name="name" class="w3-input w3-border w3-margin-bottom" type="text"
               placeholder="Name" required>
 
             <label><b>Kategorie</b></label>
-            <select id="newItemDialogCategory" name="category_id" class="w3-select w3-border w3-margin-bottom">
+            <select id="dlgDishCategory" name="category_id" class="w3-select w3-border w3-margin-bottom">
               <option value="" disabled selected>Kategorie auswählen</option>
             </select>
 
             <label><b>Bild</b></label>
             <br>
-            <label for="newItemDialogFile" id="newItemDialogFileLabel"
-              class="w3-button w3-border w3-margin-bottom w3-light-grey" style="width: 100%;">Bild auswählen</label>
-            <input id="newItemDialogFile" name="image" type="file" class="hidden" />
+            <label for="dlgDishFile" id="dlgDishFileLabel" class="w3-button w3-border w3-margin-bottom w3-light-grey"
+              style="width: 100%;">Bild auswählen</label>
+            <input id="dlgDishFile" name="image" type="file" class="hidden" />
 
 
             <label><b>Zutaten</b></label>
-            <div id="newItemDialogIngredients" class="w3-margin-bottom w3-container">
+            <div id="dlgDishIngredients" class="w3-margin-bottom w3-container">
               <div class="w3-row">
                 <div class="w3-col s2">
-                  <input id="ingredients_amount_1" name="ingredients_amount_1" class="w3-input" type="text" placeholder="1kg" required>
+                  <input name="ingredients_amount_1" class="w3-input" type="text" placeholder="1kg">
                 </div>
                 <div class="w3-col s9">
-                  <input id="ingredients_name_1" name="ingredients_name_1" class="w3-input" type="text" placeholder="Zutat" required>
+                  <input name="ingredients_name_1" class="w3-input" type="text" placeholder="Zutat">
                 </div>
                 <div class="w3-col s1">
-                  <button id="contextEdit" class="w3-bar-item w3-button" onclick="deleteIngredient(1)"><i class="glyphicon glyphicon-remove"></i></button>
+                  <button id="contextEdit" class="w3-bar-item w3-button" onclick="deleteIngredient(1)"><i
+                      class="glyphicon glyphicon-remove"></i></button>
                 </div>
               </div>
               <div class="w3-row">
                 <div class="w3-col s2">
-                  <input id="ingredients_amount_1" name="ingredients_amount_1" class="w3-input" type="text" placeholder="1kg" required>
+                  <input name="ingredients_amount_1" class="w3-input" type="text" placeholder="1kg">
                 </div>
                 <div class="w3-col s9">
-                  <input id="ingredients_name_1" name="ingredients_name_1" class="w3-input" type="text" placeholder="Zutat" required>
+                  <input name="ingredients_name_1" class="w3-input" type="text" placeholder="Zutat">
                 </div>
                 <div class="w3-col s1">
-                  <button id="contextEdit" class="w3-bar-item w3-button" onclick="deleteIngredient(2)"><i class="glyphicon glyphicon-remove"></i></button>
+                  <button id="contextEdit" class="w3-bar-item w3-button" onclick="deleteIngredient(2)"><i
+                      class="glyphicon glyphicon-remove"></i></button>
                 </div>
               </div>
             </div>
 
 
             <label><b>Zubereitung</b></label>
-            <textarea id="newItemDialogPreparation" class="w3-input w3-border" style="resize:none" rows="10"></textarea>
+            <textarea id="dlgDishPreparation" name="preparation" class="w3-input w3-border" style="resize:none"
+              rows="10"></textarea>
           </div>
         </div>
         <div class="w3-container w3-border-top w3-padding-16 w3-light-grey w3-center">
-          <button id="newItemAdd" class="w3-button w3-red" type="submit">Hinzufügen</button>
-          <button id="newItemCancel" class="w3-button w3-red">Abbrechen</button>
-        </div>
-      </form>
-    </div>
-  </div>
-
-  
-
-  <!-- ! Edit Dialogs ! -->
-  <div id="editCategoryDialog" class="w3-modal">
-    <div class="w3-modal-content w3-animate-zoom" style="max-width:400px">
-      <header class="w3-container w3-green">
-        <h3>Kategorie Bearbeiten</h3>
-      </header>
-
-      <form id="editCategoryDialogForm" action="php/recipes/update.php" method="post">
-        <input name="type" type="hidden" value="category">
-        <input id="editCategoryDialogId" name="id" type="hidden">
-
-        <div class="w3-container">
-          <div class="w3-section">
-            <label><b>Name</b></label>
-            <input id="editCategoryDialogName" name="name" class="w3-input w3-border w3-margin-bottom" type="text" placeholder="Name" required>
-          </div>
-        </div>
-
-        <div class="w3-container w3-border-top w3-padding-16 w3-light-grey w3-center">
-          <button id="editCategoryUpdate" class="w3-button w3-red" type="submit">Aktualisieren</button>
-          <button id="editCategoryCancel" class="w3-button w3-red">Abbrechen</button>
-        </div>
-      </form>
-    </div>
-  </div>
-
-  <div id="editItemDialog" class="w3-modal">
-    <div class="w3-modal-content w3-animate-zoom" style="max-width:400px">
-      <header class="w3-container w3-green">
-        <h3>Gericht Bearbeiten</h3>
-      </header>
-
-      <form id="editItemDialogForm" action="php/recipes/update.php" method="post">
-        <input name="type" type="hidden" value="dish">
-        <input id="editItemDialogId" name="id" type="hidden">
-
-        <div class="w3-container">
-          <div class="w3-section">
-            <label><b>Name</b></label>
-            <input id="editItemDialogName" name="name" class="w3-input w3-border w3-margin-bottom" type="text"
-              placeholder="Name" required>
-
-            <label><b>Kategorie</b></label>
-            <select id="editItemDialogCategory" name="category_id" class="w3-select w3-border w3-margin-bottom">
-              <option value="" disabled selected>Kategorie auswählen</option>
-            </select>
-
-            <label><b>Bild</b></label>
-            <br>
-            <label for="editItemDialogFile" id="editItemDialogFileLabel"
-              class="w3-button w3-border w3-margin-bottom w3-light-grey" style="width: 100%;">Neues Bild auswählen</label>
-            <input id="editItemDialogFile" name="image" type="file" hidden/>
-          </div>
-        </div>
-        <div class="w3-container w3-border-top w3-padding-16 w3-light-grey w3-center">
-          <button id="editItemUpdate" class="w3-button w3-red" type="submit">Aktualisieren</button>
-          <button id="editItemCancel" class="w3-button w3-red">Abbrechen</button>
+          <button id="dlgDishSubmit" class="w3-button w3-red" type="submit">Hinzufügen</button>
+          <button id="dlgDishCancel" class="w3-button w3-red">Abbrechen</button>
         </div>
       </form>
     </div>
@@ -224,8 +173,8 @@
       </header>
 
       <form id="deleteDialogForm" action="php/recipes/delete.php" method="post">
-            <input id="deleteDialogId" name="id" type="hidden">
-            <input id="deleteDialogType" name="type" type="hidden">
+        <input id="deleteDialogId" name="id" type="hidden">
+        <input id="deleteDialogType" name="type" type="hidden">
 
         <div class="w3-container w3-border-top w3-padding-16 w3-light-grey w3-center">
           <button id="deleteDialogYes" class="w3-button w3-red" type="submit">Ja</button>
@@ -236,11 +185,21 @@
   </div>
 
 
+  <!-- <div class="w3-red" style="width:100px">
+    <video id="videoEl" style="width:50px; height:50px">
+      <source id="videoSource" />
+    </video>
+    <div id="status"></div>
+  </div> -->
+
   <script src="js/recipes/main.js"></script>
   <script src="js/recipes/contextMenu.js"></script>
-  <script src="js/recipes/categoryDlgs.js"></script>
-  <script src="js/recipes/itemDlgs.js"></script>
+  <!-- <script src="js/recipes/dishDlgs.js"></script> -->
+  <!-- <script src="js/recipes/noSleep.js"></script> -->
 
+  <!-- <p>Wake Lock status: <b id="status">unknown</b>.</p>
+  <p>Supported API: <b id="api">none</b>.</p>
+  <p><button onclick="toggle()">Toggle</button></p> -->
 
   <script>
     function Sleep(milliseconds) {
@@ -248,9 +207,12 @@
     }
 
     async function test() {
-      await Sleep(500); // Pausiert die Funktion für 3 Sekunden
-      openNewItemDialog();
-      //document.getElementById('newItemDialog').style.display = 'block';
+      await Sleep(1500); // Pausiert die Funktion für 3 Sekunden
+      Dish.show(1);
+
+      // DlgDish.openDialogUpdate(1);
+      //openNewDishDialog();
+      //document.getElementById('dlgDish').style.display = 'block';
     }
     test();
   </script>

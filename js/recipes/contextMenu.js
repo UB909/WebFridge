@@ -40,15 +40,11 @@ function addContextMenu(domElement, type, id) {
 function contextMenuEdit() {
   switch (currentType) {
     case "category": {
-      openEditCategoryDialog(currentId);
+      DlgCategory.openDialogUpdate(currentId);
       break;
     }
-    case "location": {
-      openEditLocationDialog(currentId);
-      break;
-    }
-    case "item": {
-      openEditItemDialog(currentId);
+    case "dish": {
+      DlgDish.openDialogUpdate(currentId);
       break;
     }
   }
@@ -63,12 +59,8 @@ function contextMenuDelete() {
       openDeleteDialog(currentId, currentType, Category.getById(currentId).name);
       break;
     }
-    case "location": {
-      openDeleteDialog(currentId, currentType, Location.getById(currentId).name);
-      break;
-    }
-    case "item": {
-      openDeleteDialog(currentId, currentType, Item.getById(currentId).name);
+    case "dish": {
+      openDeleteDialog(currentId, currentType, Dish.getById(currentId).name);
       break;
     }
   }
