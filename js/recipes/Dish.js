@@ -63,11 +63,24 @@ class Dish {
     document.getElementById("dishName").innerText = currentDish.name;
 
     // Ingredients
-    var s = "";
+    var lastAddStr = 'NOTSET';
+    var s = '';
     for(var id = 0; id < currentDish.ingredients.length; id++) {
+      if (lastAddStr != currentDish.ingredients[id][2]) {
+        if(id != 0) {
+          s = s + '</table>';
+        }
+        lastAddStr = currentDish.ingredients[id][2];
+        if(lastAddStr) {
+          s = s + '<h3>Zutaten ' + lastAddStr + ':</h3><table>';
+        }else{
+          s = s + '<h3>Zutaten:</h3><table>';
+        }
+      }
       s = s + '<tr><td class="dishIngredientAmount">' + currentDish.ingredients[id][0] + '</td>';
       s = s + '<td class="dishIngredientName">' + currentDish.ingredients[id][1] + '</td></tr>';
     }
+    s = s + '</table>';
     document.getElementById('dishIngredients').innerHTML = s;
     
     // Preparation

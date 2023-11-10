@@ -54,8 +54,7 @@
     <div class="w3-row" style="width: 100%;">
       <div class="w3-col s9">
         <h2 id="dishName">GERIHT</h2>
-        <h3>Zutaten</h3>
-        <table id="dishIngredients"></table>
+        <div id="dishIngredients"/></div>
         <h3>Zubereitung</h3>
         <div id="dishPreparation" class="dishPreparation"></div>
       </div>
@@ -201,21 +200,21 @@
   <p>Supported API: <b id="api">none</b>.</p>
   <p><button onclick="toggle()">Toggle</button></p> -->
 
-  <!-- <script>
+  <script>
     function Sleep(milliseconds) {
       return new Promise(resolve => setTimeout(resolve, milliseconds));
     }
 
     async function test() {
-      await Sleep(1500); // Pausiert die Funktion für 3 Sekunden
-      Dish.show(1);
+      await Sleep(1000); // Pausiert die Funktion für 3 Sekunden
+      // Dish.show(13);
 
-      // DlgDish.openDialogUpdate(1);
+      DlgDish.openDialogUpdate(13);
       //openNewDishDialog();
       //document.getElementById('dlgDish').style.display = 'block';
     }
     test();
-  </script> -->
+  </script>
 </body>
 
 </html>

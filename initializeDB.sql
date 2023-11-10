@@ -83,3 +83,5 @@ CREATE TABLE recipes_ingredients (
   KEY(dish_id),
   CONSTRAINT constr_dish FOREIGN KEY (dish_id) REFERENCES recipes_dishes (id)
 ) ENGINE=InnoDB DEFAULT CHARSET=utf8mb4;
+
+ALTER TABLE `recipes_ingredients` ADD `additionalTitle` TEXT NULL DEFAULT NULL AFTER `name`; 

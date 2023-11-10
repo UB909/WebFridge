@@ -51,6 +51,7 @@ class DlgDish {
     for(var i = 0; i < dish.ingredients.length; i++) {
       DlgDish.domIngredientsEditFields[i][0].value = dish.ingredients[i][0];
       DlgDish.domIngredientsEditFields[i][1].value = dish.ingredients[i][1];
+      DlgDish.domIngredientsEditFields[i][2].value = dish.ingredients[i][2];
       DlgDish.addIngredientsRow();
     }
   }
@@ -126,8 +127,9 @@ class DlgDish {
     else {
       var lastAmount = DlgDish.domIngredientsEditFields[lastId-1][0].value;
       var lastName = DlgDish.domIngredientsEditFields[lastId-1][1].value;
-
-      if ((lastAmount.length != 0) || (lastName.length != 0)) {
+      var lastAdditionalTitle = DlgDish.domIngredientsEditFields[lastId-1][2].value;
+      
+      if ((lastAmount.length != 0) || (lastName.length != 0) || (lastAdditionalTitle.length != 0)) {
         DlgDish.addIngredientsRow();
       }
     }
@@ -158,7 +160,7 @@ class DlgDish {
     // Name
     var col = document.createElement("div");
     row.appendChild(col);
-    col.className = "w3-col s9";
+    col.className = "w3-col s5";
     
     var editField = document.createElement("input");
     editFields.push(editField);
@@ -167,6 +169,20 @@ class DlgDish {
     editField.name = "ingredients_name_" + id;
     editField.type = "text";
     editField.placeholder = "Zutat";
+    editField.addEventListener("change", DlgDish.addIngredientsRowIfNecessary);
+
+    // additional title
+    var col = document.createElement("div");
+    row.appendChild(col);
+    col.className = "w3-col s4";
+    
+    var editField = document.createElement("input");
+    editFields.push(editField);
+    col.appendChild(editField);
+    editField.className = "w3-input";
+    editField.name = "ingredients_additionalTitle_" + id;
+    editField.type = "text";
+    editField.placeholder = "zusätzl. Zutaten Typ";
     editField.addEventListener("change", DlgDish.addIngredientsRowIfNecessary);
 
     // Delete Button
@@ -188,6 +204,7 @@ class DlgDish {
     for(; id < DlgDish.domIngredientsEditFields.length; id++) {
       DlgDish.domIngredientsEditFields[id][0].name = 'ingredients_amount_' + id;
       DlgDish.domIngredientsEditFields[id][1].name = 'ingredients_name_' + id;
+      DlgDish.domIngredientsEditFields[id][2].name = 'ingredients_additionalTitle_' + id;
     }
 
     DlgDish.addIngredientsRowIfNecessary();

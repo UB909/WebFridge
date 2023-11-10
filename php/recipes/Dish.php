@@ -53,7 +53,10 @@ class Dish extends NamedDatabaseItem {
     }
 
     for($i = 0; $i < count($ingredients); $i++) {
-      $sqlSession->query("INSERT INTO recipes_ingredients (dish_id, amount, name) VALUES ($lastId, '".  $sqlSession->real_escape_string($ingredients[$i]['amount']) . "', '".  $sqlSession->real_escape_string($ingredients[$i]['name']) . "')");
+      $sqlSession->query("INSERT INTO recipes_ingredients (dish_id, amount, name, additionalTitle) VALUES ($lastId, '".  
+        $sqlSession->real_escape_string($ingredients[$i]['amount']) . "', '".  
+        $sqlSession->real_escape_string($ingredients[$i]['name']) . "', '".  
+        $sqlSession->real_escape_string($ingredients[$i]['additionalTitle']) . "')");
     }
 
     echo("OK");
@@ -64,11 +67,11 @@ class Dish extends NamedDatabaseItem {
     $dishes = NamedDatabaseItem::loadNamedDatabaseItemsFromSql($sqlSession, "recipes_dishes", ", tab.category_id, tab.preparation", static::class);
     
     for($i = 0; $i < count($dishes); $i++) {
-      $sql = "SELECT amount, name FROM recipes_ingredients WHERE dish_id = " . $dishes[$i]->id . " ORDER BY id";
+      $sql = "SELECT amount, name, additionalTitle FROM recipes_ingredients WHERE dish_id = " . $dishes[$i]->id . " ORDER BY additionalTitle, id";
       $result = $sqlSession->query($sql) or die("<b>Error:</b> Problem loading $table.<br/>" . mysqli_error($conn));
       if($result !== FALSE) {
         while ($row = $result->fetch_array(MYSQLI_ASSOC)) {
-          array_push($dishes[$i]->ingredients, array($row["amount"], $row["name"]));
+          array_push($dishes[$i]->ingredients, array($row["amount"], $row["name"], $row["additionalTitle"]));
         }
       }
     }
@@ -103,7 +106,10 @@ class Dish extends NamedDatabaseItem {
 
     $sqlSession->query("DELETE FROM recipes_ingredients WHERE dish_id = $id");
     for($i = 0; $i < count($ingredients); $i++) {
-      $sqlSession->query("INSERT INTO recipes_ingredients (dish_id, amount, name) VALUES ($id, '".  $sqlSession->real_escape_string($ingredients[$i]['amount']) . "', '".  $sqlSession->real_escape_string($ingredients[$i]['name']) . "')");
+      $sqlSession->query("INSERT INTO recipes_ingredients (dish_id, amount, name, additionalTitle) VALUES ($id, '".  
+        $sqlSession->real_escape_string($ingredients[$i]['amount']) . "', '".  
+        $sqlSession->real_escape_string($ingredients[$i]['name']) . "', '".  
+        $sqlSession->real_escape_string($ingredients[$i]['additionalTitle']) . "')");
     }
 
     echo("OK");
