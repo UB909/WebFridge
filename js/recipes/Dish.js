@@ -7,10 +7,10 @@ class Dish {
    */
   static sort() {
     Dish.dishes.sort(function (a, b) {
-      if (a.name < b.name) {
+      if (a.sortName < b.sortName) {
         return -1;
       }
-      else if (a.name > b.name) {
+      else if (a.sortName > b.sortName) {
         return 1;
       }
       return 0;
@@ -60,7 +60,7 @@ class Dish {
 
     currentDish = Dish.getById(id);
     // Name
-    document.getElementById("dishName").innerText = currentDish.name;
+    document.getElementById("dishName").innerText = currentDish.viewName;
 
     // Ingredients
     var lastAddStr = 'NOTSET';
@@ -100,18 +100,25 @@ class Dish {
   constructor(dataRow) {
     this.id = dataRow.id;
     this.name = dataRow.name;
+    this.viewName = dataRow.name;
+    this.sortName = dataRow.name;
     this.categoryId = dataRow.categoryId;
     this.preparation = dataRow.preparation;
     this.ingredients = dataRow.ingredients;
 
+    if (this.sortName.search("_") != -1) {
+      this.sortName = this.sortName.substr(this.sortName.search("_") + 1); 
+      this.viewName = this.viewName.replace("_", "");
+    }
+
     this.domFrame = $('<div id="dishOverviewFrame_' + this.id + '" class="dishOverviewFrame " onClick="Dish.show(' + this.id + ')"></div>');
-    this.domImage = $('<img id="dishOverviewImg_' + this.id + '" class="dishOverviewImg" src="php/recipes/getImage.php?id=' + this.id + '&time=' + new Date().getTime() + '" alt="' + this.name + '">');
+    this.domImage = $('<img id="dishOverviewImg_' + this.id + '" class="dishOverviewImg" src="php/recipes/getImage.php?id=' + this.id + '&time=' + new Date().getTime() + '" alt="' + this.viewName + '">');
 
     var tmp = $('<div class="dishOverviewImgFrame"></div>');
     tmp.append(this.domImage);
     this.domFrame.append(tmp);
 
-    this.domDishLabel = $('<span>' + this.name + '</span>');
+    this.domDishLabel = $('<span>' + this.viewName + '</span>');
 
     tmp = $('<div class="dishOverviewLabel"></div>');
     tmp.append(this.domDishLabel);
@@ -120,16 +127,23 @@ class Dish {
     addContextMenu(this.domFrame[0], "dish", this.id);
   }
   
-  // updates data of the location
+  // updates data of the dish
   update(dataRow) {
     // just update the existing one
-    this.domDishLabel[0].innerText = dataRow.name;
-    this.domImage[0].setAttribute("alt", dataRow.name);
-
     this.name = dataRow.name;
+    this.viewName = dataRow.name;
+    this.sortName = dataRow.name;
     this.categoryId = dataRow.categoryId;
     this.preparation = dataRow.preparation;
     this.ingredients = dataRow.ingredients;
+
+    if (this.sortName.search("_") != -1) {
+      this.sortName = this.sortName.substr(this.sortName.search("_") + 1); 
+      this.viewName = this.viewName.replace("_", "");
+    }
+
+    this.domDishLabel[0].innerText = this.viewName;
+    this.domImage[0].setAttribute("alt", this.viewName);
   }
 
   /// removes itself from the location
