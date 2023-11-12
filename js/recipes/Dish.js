@@ -101,7 +101,7 @@ class Dish {
     this.id = dataRow.id;
     this.name = dataRow.name;
     this.viewName = dataRow.name;
-    this.sortName = dataRow.name;
+    this.sortName = dataRow.name.toUpperCase();
     this.categoryId = dataRow.categoryId;
     this.preparation = dataRow.preparation;
     this.ingredients = dataRow.ingredients;
@@ -132,7 +132,7 @@ class Dish {
     // just update the existing one
     this.name = dataRow.name;
     this.viewName = dataRow.name;
-    this.sortName = dataRow.name;
+    this.sortName = dataRow.name.toUpperCase();
     this.categoryId = dataRow.categoryId;
     this.preparation = dataRow.preparation;
     this.ingredients = dataRow.ingredients;
