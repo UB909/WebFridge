@@ -119,17 +119,16 @@ class DlgDish {
   }
 
   static addIngredientsRowIfNecessary() {
-    var lastId = DlgDish.domIngredientsEditFields.length;
+    var nextId = DlgDish.domIngredientsEditFields.length;
     
-    if (lastId == 0) {
+    if (nextId == 0) {
       DlgDish.addIngredientsRow();
     }
     else {
-      var lastAmount = DlgDish.domIngredientsEditFields[lastId-1][0].value;
-      var lastName = DlgDish.domIngredientsEditFields[lastId-1][1].value;
-      var lastAdditionalTitle = DlgDish.domIngredientsEditFields[lastId-1][2].value;
+      var lastAmount = DlgDish.domIngredientsEditFields[nextId-1][0].value;
+      var lastName = DlgDish.domIngredientsEditFields[nextId-1][1].value;
       
-      if ((lastAmount.length != 0) || (lastName.length != 0) || (lastAdditionalTitle.length != 0)) {
+      if ((lastAmount.length != 0) || (lastName.length != 0)) {
         DlgDish.addIngredientsRow();
       }
     }
@@ -137,6 +136,10 @@ class DlgDish {
 
   static addIngredientsRow() {
     var id = DlgDish.domIngredientsEditFields.length;
+    var lastAdditionalTitle = '';
+    if(id != 0) {
+      lastAdditionalTitle = DlgDish.domIngredientsEditFields[id-1][2].value;
+    }
 
     var editFields = [];
 
@@ -151,6 +154,7 @@ class DlgDish {
     var editField = document.createElement("input");
     editFields.push(editField);
     col.appendChild(editField);
+    editField.tabIndex = (2*id + 1);
     editField.className = "w3-input";
     editField.name = "ingredients_amount_" + id;
     editField.type = "text";
@@ -165,6 +169,7 @@ class DlgDish {
     var editField = document.createElement("input");
     editFields.push(editField);
     col.appendChild(editField);
+    editField.tabIndex = (2*id + 2);
     editField.className = "w3-input";
     editField.name = "ingredients_name_" + id;
     editField.type = "text";
@@ -182,6 +187,7 @@ class DlgDish {
     editField.className = "w3-input";
     editField.name = "ingredients_additionalTitle_" + id;
     editField.type = "text";
+    editField.value = lastAdditionalTitle;
     editField.placeholder = "zusätzl. Zutaten Typ";
     editField.addEventListener("change", DlgDish.addIngredientsRowIfNecessary);
 

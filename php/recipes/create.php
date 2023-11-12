@@ -24,7 +24,7 @@ switch($type) {
       $ing_name = $_POST["ingredients_name_" . $i];
       $additionalTitle = $_POST["ingredients_additionalTitle_" . $i];
 
-      if(!empty($amount) || !empty($ing_name) || !empty($additionalTitle)) {
+      if(!empty($amount) || !empty($ing_name)) {
         array_push($ingredients, array("amount" => $amount, "name" => $ing_name, "additionalTitle" => $additionalTitle));
       }
     }
