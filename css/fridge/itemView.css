@@ -48,3 +48,9 @@
 }
 
 
+/** Handy Monitor **/
+@media (max-width: 500px) {
+  .locationEntry {
+    font-size: 14px !important;
+  }
+}
