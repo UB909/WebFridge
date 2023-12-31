@@ -31,7 +31,7 @@ class Category {
    * @param {*} dataRow 
    */
   static addCategory(dataRow) {
-    if(Category.getById(dataRow.id) == null) {
+    if (Category.getById(dataRow.id) == null) {
       Category.categories.push(new Category(dataRow));
     }
   }
@@ -74,6 +74,19 @@ class Category {
 
     document.getElementById("itemContainer").classList.remove("hidden");
     document.getElementById("itemView").classList.add("hidden");
+
+    // Update page hash
+    var hash = '';
+    if (id == -1) {
+      hash = '#cat_all';
+    }
+    else {
+      hash = '#cat_' + id;
+    }
+
+    if(hash != window.location.hash) {
+      window.location.hash = hash;
+    }
   }
 
   constructor(dataRow) {

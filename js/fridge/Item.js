@@ -84,6 +84,15 @@ class Item {
 
       location.domNumEntries[0].innerText = numEntries;
     });
+
+    // Update page hash
+    var hash = '#item_' + id;
+    if(hash != window.location.hash) {
+      window.location.hash = hash;
+    }
+
+    // scroll to top
+    window.scrollTo(0,0);
   }
 
 

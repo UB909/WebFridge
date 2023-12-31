@@ -94,6 +94,14 @@ class Dish {
     // Image
     document.getElementById('dishImg').src = 'php/recipes/getImage.php?id=' + currentDish.id + '&time=' + new Date().getTime();
 
+    // Update page hash
+    var hash = '#dish_' + currentDish.id;
+    if(hash != window.location.hash) {
+      window.location.hash = hash;
+    }
+
+    // scroll to top
+    window.scrollTo(0,0);
   }
 
 

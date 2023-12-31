@@ -140,3 +140,22 @@ function closeDeleteDialog() {
   document.getElementById('deleteDialog').style.display = 'none';
 }
 
+window.addEventListener('hashchange',() => {
+  var hash = window.location.hash;
+  if(hash==""){
+    hash = '#cat_all';
+  }
+  
+  if(hash.startsWith('#cat')) {
+    cat = hash.substring(5);
+    if(cat == "all") {
+      Category.show(-1);
+    }
+    else {
+      Category.show(cat);
+    }
+  }
+  else if(hash.startsWith('#item')) {
+    Item.show(hash.substring(6));
+  }
+});
