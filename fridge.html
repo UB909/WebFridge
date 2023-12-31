@@ -27,31 +27,29 @@
       <button id="contextDelete" class="w3-bar-item w3-button" onclick="contextMenuDelete()">Löschen</button>
     </div>
   </div>
-  
-  <div class="w3-top w3-xlarge">
-    <!-- top must be outside for the dropdowns to work-->
-    <div id="topBar" class="w3-bar w3-grey" style="overflow:hidden;">
-      <a class="w3-bar-item w3-button w3-xxlarge" href="index.html"><i class="glyphicon glyphicon-home"></i></a>
+
+  <div id="topBar" class="w3-top w3-xlarge w3-grey">
+    <!--  https://css-tricks.com/snippets/css/a-guide-to-flexbox/ -->
+    <a class="w3-bar-item w3-button w3-xxlarge" href="index.html"><i class="glyphicon glyphicon-home"></i></a>
       
-      <button id="category_-1" class="w3-bar-item w3-button" onClick="Category.show(-1)">Alle</button>
-      <div id="categories"></div>
+    <button id="category_-1" class="w3-bar-item w3-button" onClick="Category.show(-1)">Alle</button>
+    <div id="categories"></div>
 
-      <div class="w3-dropdown-hover w3-right">
-        <button class="w3-button">+</button>
-        <div class="w3-dropdown-content w3-bar-block w3-border" style="right:0">
-          <button id="newItemShowDialog" class="w3-btton w3-bar-item">Gericht</button>
-          <button id="newCategoryShowDialog" class="w3-button w3-bar-item">Kategorie</button>
-          <button id="newLocationShowDialog" class="w3-button w3-bar-item">Ort</button>
-        </div>
+    <div class="w3-dropdown-hover w3-right">
+      <button class="w3-button">+</button>
+      <div class="w3-dropdown-content w3-bar-block w3-border" style="right:0">
+        <button id="newItemShowDialog" class="w3-btton w3-bar-item">Gericht</button>
+        <button id="newCategoryShowDialog" class="w3-button w3-bar-item">Kategorie</button>
+        <button id="newLocationShowDialog" class="w3-button w3-bar-item">Ort</button>
       </div>
-
-      <div class="w3-dropdown-hover w3-right">
-        <button class="w3-button w3-grey">Orte</button>
-        <div id="locations" class="w3-dropdown-content w3-bar-block w3-border" style="right:0"></div>
-      </div>
-
-      <button class="w3-button w3-right" onclick="updateData()">Refresh</button>
     </div>
+
+    <div class="w3-dropdown-hover w3-right">
+      <button class="w3-button w3-grey">Orte</button>
+      <div id="locations" class="w3-dropdown-content w3-bar-block w3-border" style="right:0"></div>
+    </div>
+
+    <button class="w3-button w3-right" onclick="updateData()">Refresh</button>
   </div>
 
   <!-- !PAGE CONTENT! -->

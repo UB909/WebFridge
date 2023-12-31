@@ -30,24 +30,23 @@
     </div>
   </div>
 
-  <div class="w3-top w3-xlarge">
-    <!-- top must be outside for the dropdowns to work-->
-    <div id="topBar" class="w3-bar w3-grey" style="overflow:hidden;">
-      <a class="w3-bar-item w3-button w3-xxlarge" href="index.html"><i class="glyphicon glyphicon-home"></i></a>
+  <div id="topBar" class="w3-top w3-xlarge w3-grey">
+    <!--  https://css-tricks.com/snippets/css/a-guide-to-flexbox/ -->
+    <a class="w3-bar-item w3-button w3-xxlarge" href="index.html"><i class="glyphicon glyphicon-home"></i></a>
 
-      <button id="category_-1" class="w3-bar-item w3-button" onClick="Category.show(-1)">Alle</button>
-      <div id="categories"></div>
+    <button id="category_-1" class="w3-bar-item w3-button" onClick="Category.show(-1)">Alle</button>
+    <div id="categories"></div>
 
-      <div class="w3-dropdown-hover w3-right">
-        <button class="w3-button">+</button>
-        <div class="w3-dropdown-content w3-bar-block w3-border" style="right:0">
-          <button id="dlgDishAdd" class="w3-btton w3-bar-item">Gericht</button>
-          <button id="dlgCategoryAdd" class="w3-button w3-bar-item">Kategorie</button>
-        </div>
+    <a id="noSleepButton" class="w3-bar-item w3-xxlarge w3-right"><i id="noSleepButtonI" class="glyphicon glyphicon-star" ></i></a>
+
+    <div id="dropdown" class="w3-dropdown-hover w3-right">
+      <button class="w3-button">+</button>
+      <div class="w3-dropdown-content w3-bar-block w3-border" style="right:0">
+        <button id="dlgDishAdd" class="w3-btton w3-bar-item">Gericht</button>
+        <button id="dlgCategoryAdd" class="w3-button w3-bar-item">Kategorie</button>
       </div>
- 
-      <a id="noSleepButton" class="w3-bar-item w3-xxlarge w3-right" style="color:grey"><i class="glyphicon glyphicon-star" ></i></a>
     </div>
+
   </div>
 
   <!-- !PAGE CONTENT! -->
