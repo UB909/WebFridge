@@ -25,8 +25,8 @@
 <body>
   <div id="context-menu" class="context-menuC" hidden>
     <div class="w3-bar-block w3-border">
-      <button id="contextEdit" class="w3-bar-item w3-button" onclick="contextMenuEdit()">Bearbeiten</button>
-      <button id="contextDelete" class="w3-bar-item w3-button" onclick="contextMenuDelete()">Löschen</button>
+      <button id="contextEdit" class="w3-bar-item w3-button" onclick="recipes.contextMenuEdit()">Bearbeiten</button>
+      <button id="contextDelete" class="w3-bar-item w3-button" onclick="recipes.contextMenuDelete()">Löschen</button>
     </div>
   </div>
 
@@ -56,7 +56,7 @@
     <div class="w3-row" style="width: 100%;">
       <div class="w3-col s9">
         <h2 id="dishName">GERIHT</h2>
-        <div id="dishIngredients"/></div>
+        <div id="dishIngredients"></div>
         <h3>Zubereitung</h3>
         <div id="dishPreparation" class="dishPreparation"></div>
       </div>
@@ -211,7 +211,7 @@
       await Sleep(1000); // Pausiert die Funktion für 3 Sekunden
       // Dish.show(13);
 
-      DlgDish.openDialogUpdate(13);
+      recipes.DlgDish.openDialogUpdate(13);
       //openNewDishDialog();
       //document.getElementById('dlgDish').style.display = 'block';
     }

@@ -1,4 +1,6 @@
-class Category {
+var fridge = fridge || {};
+
+fridge.Category = class {
   /// array with all categories
   static categories = [];
 
@@ -6,7 +8,7 @@ class Category {
    * sort the categories
    */
   static sort() {
-    Category.categories.sort(function (a, b) {
+    fridge.Category.categories.sort(function (a, b) {
       if (a.name < b.name) {
         return -1;
       }
@@ -19,7 +21,7 @@ class Category {
     $("#categories").empty();
     $("#newItemDialogCategory").empty();
     $("#editItemDialogCategory").empty();
-    Category.categories.forEach((category) => {
+    fridge.Category.categories.forEach((category) => {
       $("#categories").append(category.domButton);
       $("#newItemDialogCategory").append(category.domNewItemDropdown);
       $("#editItemDialogCategory").append(category.domEditItemDropdown);
@@ -31,8 +33,8 @@ class Category {
    * @param {*} dataRow 
    */
   static addCategory(dataRow) {
-    if (Category.getById(dataRow.id) == null) {
-      Category.categories.push(new Category(dataRow));
+    if (fridge.Category.getById(dataRow.id) == null) {
+      fridge.Category.categories.push(new fridge.Category(dataRow));
     }
   }
 
@@ -42,9 +44,9 @@ class Category {
    * @returns the found item or null
    */
   static getById(id) {
-    for (var i = 0; i < Category.categories.length; i++) {
-      if (Category.categories[i].id == id) {
-        return Category.categories[i];
+    for (var i = 0; i < fridge.Category.categories.length; i++) {
+      if (fridge.Category.categories[i].id == id) {
+        return fridge.Category.categories[i];
       }
     }
     return null;
@@ -56,7 +58,7 @@ class Category {
    */
   static show(id) {
     // go through all items and check if it should be shown
-    Item.items.forEach((item) => {
+    fridge.Item.items.forEach((item) => {
       if (item.categoryId == id || id == -1) {
         item.domFrame[0].classList.remove("hidden");
         item.domNumTotal[0].innerText = item.numElements;
@@ -95,7 +97,7 @@ class Category {
     this.domButton = $(
       '<button id="category_' +
       this.id +
-      '" class="w3-bar-item w3-button" onClick="Category.show(' +
+      '" class="w3-bar-item w3-button" onClick="fridge.Category.show(' +
       this.id +
       ')">' +
       this.name +
@@ -104,7 +106,7 @@ class Category {
 
     this.domNewItemDropdown = $('<option value="' + this.id + '">' + this.name + "</option>");
     this.domEditItemDropdown = $('<option value="' + this.id + '">' + this.name + "</option>");
-    addContextMenu(this.domButton[0], "category", this.id);
+    fridge.addContextMenu(this.domButton[0], "category", this.id);
   }
 
   // updates data of the category
@@ -117,7 +119,7 @@ class Category {
   /// removes itself from the DOM
   remove() {
     this.domButton[0].remove();
-    const index = Category.categories.indexOf(this);
-    Category.categories.splice(index, 1);
+    const index = fridge.Category.categories.indexOf(this);
+    fridge.Category.categories.splice(index, 1);
   }
 }

@@ -35,7 +35,7 @@ $(document).on("submit", "form#newItemDialogForm", function (event) {
     contentType: false,
     success: function (data, status) {
       if (data == "OK") {
-        updateData();
+        fridge.updateData();
         closeNewItemDialog();
       }
       else {
@@ -56,7 +56,7 @@ $(document).on("submit", "form#editItemDialogForm", function (event) {
     contentType: false,
     success: function (data, status) {
       if (data == "OK") {
-        updateData();
+        fridge.updateData();
         closeEditItemDialog();
       }
       else {
@@ -70,12 +70,12 @@ function openNewItemDialog() {
   document.getElementById('newItemDialogFileLabel').innerText = 'Bild auswählen';
   document.getElementById('newItemDialogFile').value = '';
   document.getElementById('newItemDialogName').value = '';
-  document.getElementById('newItemDialogCategory').value = Category.categories[0].id;
+  document.getElementById('newItemDialogCategory').value = fridge.Category.categories[0].id;
   document.getElementById('newItemDialog').style.display = 'block';
 }
 
 function openEditItemDialog(id) {
-  var item = Item.getById(id);
+  var item = fridge.Item.getById(id);
   document.getElementById('editItemDialogId').value = id;  
   document.getElementById('editItemDialogFileLabel').innerText = 'Bild auswählen';
   document.getElementById('editItemDialogFile').value = '';
@@ -91,7 +91,7 @@ function closeNewItemDialog() {
 }
 
 function closeEditItemDialog() {
-  var item = Item.getById(document.getElementById('editItemDialogId').value);
+  var item = fridge.Item.getById(document.getElementById('editItemDialogId').value);
   item.refreshImage();
   document.getElementById('editItemDialogId').value = '';
   document.getElementById('editItemDialogName').value = '';

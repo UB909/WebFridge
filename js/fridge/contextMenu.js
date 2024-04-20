@@ -1,44 +1,48 @@
-const menu = document.getElementById('context-menu');
-currentType = null;
-currentId = -1;
+var fridge = fridge || {};
+
+fridge.menu = null;
+fridge.currentType = null;
+fridge.currentId = -1;
 
 /**
  * Listener for closing the context menu
  */
-document.addEventListener('DOMContentLoaded', function () {
+fridge.initContextMenu = function () {
+  recfridgeipes.menu = document.getElementById('context-menu');
+  
   document.addEventListener('click', (e) => {
-    if (e.target.offsetParent != menu) {
-      menu.setAttribute('hidden', 'true');
-      currentType = null;
-      currentId = -1;
+    if (e.target.offsetParent != fridge.menu) {
+      fridge.menu.setAttribute('hidden', 'true');
+      fridge.currentType = null;
+      fridge.currentId = -1;
     }
   });
   document.addEventListener('keyup', (e) => {
     if (e.key === 'Escape') {
-      menu.setAttribute('hidden', 'true');
-      currentType = null;
-      currentId = -1;
+      fridge.menu.setAttribute('hidden', 'true');
+      fridge.currentType = null;
+      fridge.currentId = -1;
     }
   });
-});
+};
 
-function addContextMenu(domElement, type, id) {
+fridge.addContextMenu = function (domElement, type, id) {
   // add support of context menu
   domElement.addEventListener('contextmenu', function (e) {
     // Alternative
     e.preventDefault();
-    menu.style.left = e.pageX + "px";
-    menu.style.top = (e.pageY) + "px";
+    fridge.menu.style.left = e.pageX + "px";
+    fridge.menu.style.top = (e.pageY) + "px";
 
-    currentType = type;
-    currentId = id;
+    fridge.currentType = type;
+    fridge.currentId = id;
 
-    menu.removeAttribute('hidden');
+    fridge.menu.removeAttribute('hidden');
   }, false);
 }
 
-function contextMenuEdit() {
-  switch (currentType) {
+fridge.contextMenuEdit = function() {
+  switch (fridge.currentType) {
     case "category": {
       openEditCategoryDialog(currentId);
       break;
@@ -52,27 +56,27 @@ function contextMenuEdit() {
       break;
     }
   }
-  menu.setAttribute('hidden', 'true');
-  currentType = null;
-  currentId = -1;
+  fridge.menu.setAttribute('hidden', 'true');
+  fridge.currentType = null;
+  fridge.currentId = -1;
 }
 
-function contextMenuDelete() {
-  switch (currentType) {
+fridge.contextMenuDelete = function() {
+  switch (fridge.currentType) {
     case "category": {
-      openDeleteDialog(currentId, currentType, Category.getById(currentId).name);
+      fridge.openDeleteDialog(currentId, currentType, fridge.Category.getById(currentId).name);
       break;
     }
     case "location": {
-      openDeleteDialog(currentId, currentType, Location.getById(currentId).name);
+      fridge.openDeleteDialog(currentId, currentType, fridge.Location.getById(currentId).name);
       break;
     }
     case "item": {
-      openDeleteDialog(currentId, currentType, Item.getById(currentId).name);
+      fridge.openDeleteDialog(currentId, currentType, fridge.Item.getById(currentId).name);
       break;
     }
   }
-  menu.setAttribute('hidden', 'true');
-  currentType = null;
-  currentId = -1;
+  fridge.menu.setAttribute('hidden', 'true');
+  fridge.currentType = null;
+  fridge.currentId = -1;
 }

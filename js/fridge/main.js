@@ -1,7 +1,6 @@
 
 var lastFilterElement = null;
 var currentItem = null;
-var lastUpdatedData = 0;
 
 /**
  * retrieve the initial data from the server
@@ -26,81 +25,81 @@ function addReceivedData(data) {
 
   // parse the categories and create the HTML buttons for them
   var existingIds = [];
-  Category.categories.forEach((cat) => {
+  fridge.Category.categories.forEach((cat) => {
     existingIds.push(cat.id);
   });
 
   data.categories.forEach((dataRow) => {
-    var cat = Category.getById(dataRow.id);
+    var cat = fridge.Category.getById(dataRow.id);
     if(cat) {
       cat.update(dataRow.name);
       const index = existingIds.indexOf(dataRow.id);
       existingIds.splice(index, 1);
     }
     else {
-      Category.addCategory(dataRow);
+      fridge.Category.addCategory(dataRow);
     }
   });
 
   existingIds.forEach((id) => {
-    Category.getById(id).remove();
+    fridge.Category.getById(id).remove();
   });
 
   // parse the locations, create the entry in the top-menu as well in the detailed view of an item
   var existingIds = [];
-  Location.locations.forEach((loc) => {
+  fridge.Location.locations.forEach((loc) => {
     existingIds.push(loc.id);
   });
   
   data.locations.forEach((dataRow) => {
-    var loc = Location.getById(dataRow.id);
+    var loc = fridge.Location.getById(dataRow.id);
     if(loc) {
       loc.update(dataRow.name);
       const index = existingIds.indexOf(dataRow.id);
       existingIds.splice(index, 1);
     }
     else {
-      Location.addLocation(dataRow);
+      fridge.Location.addLocation(dataRow);
     }
   });
 
   existingIds.forEach((id) => {
-    Location.getById(id).remove();
+    fridge.Location.getById(id).remove();
   });
 
   // parse items and create the HTML elements
   var existingIds = [];
-  Item.items.forEach((item) => {
+  fridge.Item.items.forEach((item) => {
     existingIds.push(item.id);
   });
   
   data.items.forEach((dataRow) => {
-    var item = Item.getById(dataRow.id);
+    var item = fridge.Item.getById(dataRow.id);
     if(item) {
       item.update(dataRow.name, dataRow.categoryId);
       const index = existingIds.indexOf(dataRow.id);
       existingIds.splice(index, 1);
     }
     else {
-      Item.addItem(dataRow);
+      fridge.Item.addItem(dataRow);
     }
   });
 
   existingIds.forEach((id) => {
-    Item.getById(id).remove();
+    fridge.Item.getById(id).remove();
   });
 
   // parse and count entries and add them to the corresponding item
   data.entries.forEach((dataRow) => {
-    Item.getById(dataRow.itemId).updateOrAddEntry(dataRow);
+    fridge.Item.getById(dataRow.itemId).updateOrAddEntry(dataRow);
   });
-  Item.items.forEach((item) => {
+  fridge.Item.items.forEach((item) => {
     item.updateNumberOfElements();
   });
 
-  Category.sort();
-  Item.sort();
-  Location.sort();
+  fridge.Category.sort();
+  fridge.Item.sort();
+  fridge.Location.sort();
 }
 
 $("#deleteDialogCancel").click(function (event) {
@@ -119,7 +118,7 @@ $(document).on("submit", "form#deleteDialogForm", function (event) {
     contentType: false,
     success: function (data, status) {
       if (data == "OK") {
-        updateData();
+        fridge.updateData();
         closeDeleteDialog();
       }
       else {
@@ -149,13 +148,13 @@ window.addEventListener('hashchange',() => {
   if(hash.startsWith('#cat')) {
     cat = hash.substring(5);
     if(cat == "all") {
-      Category.show(-1);
+      fridge.Category.show(-1);
     }
     else {
-      Category.show(cat);
+      fridge.Category.show(cat);
     }
   }
   else if(hash.startsWith('#item')) {
-    Item.show(hash.substring(6));
+    fridge.Item.show(hash.substring(6));
   }
 });

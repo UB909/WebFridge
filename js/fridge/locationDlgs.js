@@ -21,7 +21,7 @@ $(document).on("submit", "form#newLocationDialogForm", function (event) {
     contentType: false,
     success: function (data, status) {
       if (data == "OK") {
-        updateData();
+        fridge.updateData();
         closeNewLocationDialog();
       }
       else {
@@ -42,7 +42,7 @@ $(document).on("submit", "form#editLocationDialogForm", function (event) {
     contentType: false,
     success: function (data, status) {
       if (data == "OK") {
-        updateData();
+        fridge.updateData();
         closeEditLocationDialog();
       }
       else {
@@ -59,7 +59,7 @@ function openNewLocationDialog() {
 
 function openEditLocationDialog(id) {
   document.getElementById('editLocationDialogId').value = id;
-  document.getElementById('editLocationDialogName').value = Location.getById(id).name;
+  document.getElementById('editLocationDialogName').value = fridge.Location.getById(id).name;
   document.getElementById('editLocationDialog').style.display = 'block';
 }
 

@@ -1,4 +1,6 @@
-class Entry {
+var fridge = fridge || {};
+
+fridge.Entry = class {
   /**
    * Increases the number of entries for the @ref currentItem at a given location
    * @param {*} id id of the location
@@ -17,7 +19,7 @@ class Entry {
         break;
       }
     }
-    Location.getById(id).domNumEntries[0].innerText = value;
+    fridge.Location.getById(id).domNumEntries[0].innerText = value;
 
     if(entry == -1) {
       // update database
@@ -28,7 +30,7 @@ class Entry {
         id +
         "&numberOfItems=" + value, 
         function (data, status) { 
-          var item = Item.getById(data.itemId);
+          var item = fridge.Item.getById(data.itemId);
           item.updateOrAddEntry(data);
           item.updateNumberOfElements();
         }
@@ -71,7 +73,7 @@ class Entry {
     }
 
     if(entry != -1) {
-      Location.getById(id).domNumEntries[0].innerText = value;
+      fridge.Location.getById(id).domNumEntries[0].innerText = value;
 
       $.get(
         "php/fridge/update.php?type=entry&id=" +

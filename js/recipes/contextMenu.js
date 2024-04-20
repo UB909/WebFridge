@@ -1,70 +1,74 @@
-const menu = document.getElementById('context-menu');
-currentType = null;
-currentId = -1;
+var recipes = recipes || {};
+
+recipes.menu = null;
+recipes.currentType = null;
+recipes.currentId = -1;
 
 /**
  * Listener for closing the context menu
  */
-document.addEventListener('DOMContentLoaded', function () {
+recipes.initContextMenu = function () {
+  recipes.menu = document.getElementById('context-menu');
+  
   document.addEventListener('click', (e) => {
-    if (e.target.offsetParent != menu) {
-      menu.setAttribute('hidden', 'true');
-      currentType = null;
-      currentId = -1;
+    if (e.target.offsetParent != recipes.menu) {
+      recipes.menu.setAttribute('hidden', 'true');
+      recipes.currentType = null;
+      recipes.currentId = -1;
     }
   });
   document.addEventListener('keyup', (e) => {
     if (e.key === 'Escape') {
-      menu.setAttribute('hidden', 'true');
-      currentType = null;
-      currentId = -1;
+      recipes.menu.setAttribute('hidden', 'true');
+      recipes.currentType = null;
+      recipes.currentId = -1;
     }
   });
-});
+};
 
-function addContextMenu(domElement, type, id) {
+recipes.addContextMenu = function (domElement, type, id) {
   // add support of context menu
   domElement.addEventListener('contextmenu', function (e) {
     // Alternative
     e.preventDefault();
-    menu.style.left = e.pageX + "px";
-    menu.style.top = (e.pageY) + "px";
+    recipes.menu.style.left = e.pageX + "px";
+    recipes.menu.style.top = (e.pageY) + "px";
 
-    currentType = type;
-    currentId = id;
+    recipes.currentType = type;
+    recipes.currentId = id;
 
-    menu.removeAttribute('hidden');
+    recipes.menu.removeAttribute('hidden');
   }, false);
 }
 
-function contextMenuEdit() {
-  switch (currentType) {
+recipes.contextMenuEdit = function() {
+  switch (recipes.currentType) {
     case "category": {
-      DlgCategory.openDialogUpdate(currentId);
+      recipes.DlgCategory.openDialogUpdate(recipes.currentId);
       break;
     }
     case "dish": {
-      DlgDish.openDialogUpdate(currentId);
+      recipes.DlgDish.openDialogUpdate(recipes.currentId);
       break;
     }
   }
-  menu.setAttribute('hidden', 'true');
-  currentType = null;
-  currentId = -1;
+  recipes.menu.setAttribute('hidden', 'true');
+  recipes.currentType = null;
+  recipes.currentId = -1;
 }
 
-function contextMenuDelete() {
-  switch (currentType) {
+recipes.contextMenuDelete = function() {
+  switch (recipes.currentType) {
     case "category": {
-      openDeleteDialog(currentId, currentType, Category.getById(currentId).name);
+      recipes.openDeleteDialog(recipes.currentId, recipes.currentType, recipes.Category.getById(recipes.currentId).name);
       break;
     }
     case "dish": {
-      openDeleteDialog(currentId, currentType, Dish.getById(currentId).name);
+      recipes.openDeleteDialog(recipes.currentId, recipes.currentType, recipes.Dish.getById(recipes.currentId).name);
       break;
     }
   }
-  menu.setAttribute('hidden', 'true');
-  currentType = null;
-  currentId = -1;
+  recipes.menu.setAttribute('hidden', 'true');
+  recipes.currentType = null;
+  recipes.currentId = -1;
 }

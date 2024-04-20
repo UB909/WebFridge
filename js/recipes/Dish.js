@@ -1,4 +1,6 @@
-class Dish {
+var recipes = recipes || {};
+
+recipes.Dish = class {
   /// array with all dishes
   static dishes = [];
 
@@ -6,7 +8,7 @@ class Dish {
    * sort the dishes
    */
   static sort() {
-    Dish.dishes.sort(function (a, b) {
+    recipes.Dish.dishes.sort(function (a, b) {
       if (a.sortName < b.sortName) {
         return -1;
       }
@@ -17,7 +19,7 @@ class Dish {
     });
 
     $("#dishContainer").empty();
-    Dish.dishes.forEach((dish) => {
+    recipes.Dish.dishes.forEach((dish) => {
       $("#dishContainer").append(dish.domFrame);
     });
   }
@@ -27,8 +29,8 @@ class Dish {
    * @param {*} dataRow 
    */
   static addDish(dataRow) {
-    if(Dish.getById(dataRow.id) == null) {
-      Dish.dishes.push(new Dish(dataRow));
+    if(recipes.Dish.getById(dataRow.id) == null) {
+      recipes.Dish.dishes.push(new recipes.Dish(dataRow));
     }
   }
 
@@ -38,9 +40,9 @@ class Dish {
    * @returns the found dish or null
    */
   static getById(id) {
-    for (var i = 0; i < Dish.dishes.length; i++) {
-      if (Dish.dishes[i].id == id) {
-        return Dish.dishes[i];
+    for (var i = 0; i < recipes.Dish.dishes.length; i++) {
+      if (recipes.Dish.dishes[i].id == id) {
+        return recipes.Dish.dishes[i];
       }
     }
     return null;
@@ -51,40 +53,40 @@ class Dish {
    * @param {*} id
    */
   static show(id) {
-    if (lastFilterElement) {
-      lastFilterElement.classList.remove("w3-green");
-      lastFilterElement = null;
+    if (recipes.lastFilterElement) {
+      recipes.lastFilterElement.classList.remove("w3-green");
+      recipes.lastFilterElement = null;
     }
     document.getElementById("dishContainer").classList.add("hidden");
     document.getElementById("dishView").classList.remove("hidden");
 
-    currentDish = Dish.getById(id);
+    recipes.currentDish = recipes.Dish.getById(id);
     // Name
-    document.getElementById("dishName").innerText = currentDish.viewName;
+    document.getElementById("dishName").innerText = recipes.currentDish.viewName;
 
     // Ingredients
     var lastAddStr = 'NOTSET';
     var s = '';
-    for(var id = 0; id < currentDish.ingredients.length; id++) {
-      if (lastAddStr != currentDish.ingredients[id][2]) {
+    for(var id = 0; id < recipes.currentDish.ingredients.length; id++) {
+      if (lastAddStr != recipes.currentDish.ingredients[id][2]) {
         if(id != 0) {
           s = s + '</table>';
         }
-        lastAddStr = currentDish.ingredients[id][2];
+        lastAddStr = recipes.currentDish.ingredients[id][2];
         if(lastAddStr) {
           s = s + '<h3>Zutaten ' + lastAddStr + ':</h3><table>';
         }else{
           s = s + '<h3>Zutaten:</h3><table>';
         }
       }
-      s = s + '<tr><td class="dishIngredientAmount">' + currentDish.ingredients[id][0] + '</td>';
-      s = s + '<td class="dishIngredientName">' + currentDish.ingredients[id][1] + '</td></tr>';
+      s = s + '<tr><td class="dishIngredientAmount">' + recipes.currentDish.ingredients[id][0] + '</td>';
+      s = s + '<td class="dishIngredientName">' + recipes.currentDish.ingredients[id][1] + '</td></tr>';
     }
     s = s + '</table>';
     document.getElementById('dishIngredients').innerHTML = s;
     
     // Preparation
-    var blocks = currentDish.preparation.split(/\r?\n/)
+    var blocks = recipes.currentDish.preparation.split(/\r?\n/)
     var s = "";
     for(var i = 0; i < blocks.length; i++) {
       s = s + '<p>' + blocks[i] + '</p>';
@@ -92,10 +94,10 @@ class Dish {
     document.getElementById('dishPreparation').innerHTML = s;
 
     // Image
-    document.getElementById('dishImg').src = 'php/recipes/getImage.php?id=' + currentDish.id + '&time=' + new Date().getTime();
+    document.getElementById('dishImg').src = 'php/recipes/getImage.php?id=' + recipes.currentDish.id + '&time=' + new Date().getTime();
 
     // Update page hash
-    var hash = '#dish_' + currentDish.id;
+    var hash = '#dish_' + recipes.currentDish.id;
     if(hash != window.location.hash) {
       window.location.hash = hash;
     }
@@ -119,7 +121,7 @@ class Dish {
       this.viewName = this.viewName.replace("_", "");
     }
 
-    this.domFrame = $('<div id="dishOverviewFrame_' + this.id + '" class="dishOverviewFrame " onClick="Dish.show(' + this.id + ')"></div>');
+    this.domFrame = $('<div id="dishOverviewFrame_' + this.id + '" class="dishOverviewFrame " onClick="recipes.Dish.show(' + this.id + ')"></div>');
     this.domImage = $('<img id="dishOverviewImg_' + this.id + '" class="dishOverviewImg" src="php/recipes/getImage.php?id=' + this.id + '&time=' + new Date().getTime() + '" alt="' + this.viewName + '">');
 
     var tmp = $('<div class="dishOverviewImgFrame"></div>');
@@ -132,7 +134,7 @@ class Dish {
     tmp.append(this.domDishLabel);
     this.domFrame.append(tmp);
 
-    addContextMenu(this.domFrame[0], "dish", this.id);
+    recipes.addContextMenu(this.domFrame[0], "dish", this.id);
   }
   
   // updates data of the dish
@@ -157,8 +159,8 @@ class Dish {
   /// removes itself from the location
   remove() {
     this.domFrame[0].remove();
-    const index = Dish.dishes.indexOf(this);
-    Dish.dishes.splice(index, 1);
+    const index = recipes.Dish.dishes.indexOf(this);
+    recipes.Dish.dishes.splice(index, 1);
   }
 
   refreshImage() {

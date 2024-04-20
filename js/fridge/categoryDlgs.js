@@ -22,7 +22,7 @@ $(document).on("submit", "form#newCategoryDialogForm", function (event) {
     contentType: false,
     success: function (data, status) {
       if (data == "OK") {
-        updateData();
+        fridge.updateData();
         closeNewCategoryDialog();
       }
       else {
@@ -43,7 +43,7 @@ $(document).on("submit", "form#editCategoryDialogForm", function (event) {
     contentType: false,
     success: function (data, status) {
       if (data == "OK") {
-        updateData();
+        fridge.updateData();
         closeEditCategoryDialog();
       }
       else {

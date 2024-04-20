@@ -1,0 +1,136 @@
+<div id="context-menu" class="context-menuC" hidden>
+  <div class="w3-bar-block w3-border">
+    <button id="contextEdit" class="w3-bar-item w3-button" onclick="recipes.contextMenuEdit()">Bearbeiten</button>
+    <button id="contextDelete" class="w3-bar-item w3-button" onclick="recipes.contextMenuDelete()">Löschen</button>
+  </div>
+</div>
+
+<div id="topBar" class="w3-top w3-xlarge w3-grey">
+  <!--  https://css-tricks.com/snippets/css/a-guide-to-flexbox/ -->
+  <a class="w3-bar-item w3-button w3-xxlarge" href="index.html"><i class="glyphicon glyphicon-home"></i></a>
+
+  <button id="category_-1" class="w3-bar-item w3-button" onClick="recipes.Category.show(-1)">Alle</button>
+  <div id="categories"></div>
+
+  <a id="noSleepButton" class="w3-bar-item w3-xxlarge w3-right"><i id="noSleepButtonI" class="glyphicon glyphicon-star" ></i></a>
+
+  <div id="dropdown" class="w3-dropdown-hover w3-right">
+    <button class="w3-button">+</button>
+    <div class="w3-dropdown-content w3-bar-block w3-border" style="right:0">
+      <button id="dlgDishAdd" class="w3-btton w3-bar-item">Gericht</button>
+      <button id="dlgCategoryAdd" class="w3-button w3-bar-item">Kategorie</button>
+    </div>
+  </div>
+
+</div>
+
+<!-- !PAGE CONTENT! -->
+<div id="dishContainer" class="w3-main w3-padding mainContainer"></div>
+
+<div id="dishView" class="w3-main w3-padding mainContainer hidden">
+  <div class="w3-row" style="width: 100%;">
+    <div class="w3-col s9">
+      <h2 id="dishName">GERIHT</h2>
+      <div id="dishIngredients"></div>
+      <h3>Zubereitung</h3>
+      <div id="dishPreparation" class="dishPreparation"></div>
+    </div>
+    <div class="w3-col s3">
+      <img id="dishImg">
+    </div>
+  </div>
+</div>
+
+
+
+<!-- ! Dialogs ! -->
+
+<div id="dlgDish" class="w3-modal">
+  <div class="w3-modal-content w3-animate-zoom" style="max-width:800px;">
+    <header class="w3-container w3-green">
+      <h3 id="dlgDishLabel">Gericht</h3>
+    </header>
+
+    <form id="dlgDishForm" action="php/recipes/create.php" method="post">
+      <input name="type" type="hidden" value="dish">
+      <input id="dlgDishId" name="id" type="hidden">
+
+      <div class="w3-container">
+        <div class="w3-section">
+          <label><b>Name</b></label>
+          <input id="dlgDishName" name="name" class="w3-input w3-border w3-margin-bottom" type="text"
+            placeholder="Name" required>
+
+          <label><b>Kategorie</b></label>
+          <select id="dlgDishCategory" name="category_id" class="w3-select w3-border w3-margin-bottom">
+            <option value="" disabled selected>Kategorie auswählen</option>
+          </select>
+
+          <label><b>Bild</b></label>
+          <br>
+          <label for="dlgDishFile" id="dlgDishFileLabel" class="w3-button w3-border w3-margin-bottom w3-light-grey"
+            style="width: 100%;">Bild auswählen</label>
+          <input id="dlgDishFile" name="image" type="file" class="hidden" />
+
+
+          <label><b>Zutaten</b></label>
+          <div id="dlgDishIngredients" class="w3-margin-bottom w3-container">
+            <div class="w3-row">
+              <div class="w3-col s2">
+                <input name="ingredients_amount_1" class="w3-input" type="text" placeholder="1kg">
+              </div>
+              <div class="w3-col s9">
+                <input name="ingredients_name_1" class="w3-input" type="text" placeholder="Zutat">
+              </div>
+              <div class="w3-col s1">
+                <button id="contextEdit" class="w3-bar-item w3-button" onclick="deleteIngredient(1)"><i
+                    class="glyphicon glyphicon-remove"></i></button>
+              </div>
+            </div>
+            <div class="w3-row">
+              <div class="w3-col s2">
+                <input name="ingredients_amount_1" class="w3-input" type="text" placeholder="1kg">
+              </div>
+              <div class="w3-col s9">
+                <input name="ingredients_name_1" class="w3-input" type="text" placeholder="Zutat">
+              </div>
+              <div class="w3-col s1">
+                <button id="contextEdit" class="w3-bar-item w3-button" onclick="deleteIngredient(2)"><i
+                    class="glyphicon glyphicon-remove"></i></button>
+              </div>
+            </div>
+          </div>
+
+
+          <label><b>Zubereitung</b></label>
+          <textarea id="dlgDishPreparation" name="preparation" class="w3-input w3-border" style="resize:none"
+            rows="10"></textarea>
+        </div>
+      </div>
+      <div class="w3-container w3-border-top w3-padding-16 w3-light-grey w3-center">
+        <button id="dlgDishSubmit" class="w3-button w3-red" type="submit">Hinzufügen</button>
+        <button id="dlgDishCancel" class="w3-button w3-red">Abbrechen</button>
+      </div>
+    </form>
+  </div>
+</div>
+
+
+<!-- ! Delete Dialog ! -->
+<div id="deleteDialog" class="w3-modal">
+  <div class="w3-modal-content w3-animate-zoom" style="max-width:400px">
+    <header class="w3-container w3-green">
+      <h3 id="deleteDialogMsg">Delete XXX?</h3>
+    </header>
+
+    <form id="deleteDialogForm" action="php/recipes/delete.php" method="post">
+      <input id="deleteDialogId" name="id" type="hidden">
+      <input id="deleteDialogType" name="type" type="hidden">
+
+      <div class="w3-container w3-border-top w3-padding-16 w3-light-grey w3-center">
+        <button id="deleteDialogYes" class="w3-button w3-red" type="submit">Ja</button>
+        <button id="deleteDialogCancel" class="w3-button w3-red">Abbrechen</button>
+      </div>
+    </form>
+  </div>
+</div>

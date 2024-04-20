@@ -1,4 +1,6 @@
-class Item {
+var fridge = fridge || {};
+
+fridge.Item = class {
   /// array with all items
   static items = [];
 
@@ -6,13 +8,13 @@ class Item {
    * sort the items
    */
   static sort() {
-    Item.items.sort(function (a, b) {
+    fridge.Item.items.sort(function (a, b) {
       if (((a.numElements != 0) && (b.numElements != 0)) ||
         ((a.numElements == 0) && (b.numElements == 0))) {
-        if (a.name < b.name) {
+        if (a.sortName < b.sortName) {
           return -1;
         }
-        else if (a.name > b.name) {
+        else if (a.sortName > b.sortName) {
           return 1;
         }
         return 0;
@@ -27,7 +29,7 @@ class Item {
     });
 
     $("#itemContainer").empty();
-    Item.items.forEach((item) => {
+    fridge.Item.items.forEach((item) => {
       $("#itemContainer").append(item.domFrame);
     });
   }
@@ -37,8 +39,8 @@ class Item {
    * @param {*} dataRow 
    */
   static addItem(dataRow) {
-    if(Item.getById(dataRow.id) == null) {
-      Item.items.push(new Item(dataRow));
+    if(fridge.Item.getById(dataRow.id) == null) {
+      fridge.Item.items.push(new fridge.Item(dataRow));
     }
   }
 
@@ -48,9 +50,9 @@ class Item {
    * @returns the found item or null
    */
   static getById(id) {
-    for (var i = 0; i < Item.items.length; i++) {
-      if (Item.items[i].id == id) {
-        return Item.items[i];
+    for (var i = 0; i < fridge.Item.items.length; i++) {
+      if (fridge.Item.items[i].id == id) {
+        return fridge.Item.items[i];
       }
     }
     return null;
@@ -70,11 +72,11 @@ class Item {
     document.getElementById("itemContainer").classList.add("hidden");
     document.getElementById("itemView").classList.remove("hidden");
 
-    currentItem = Item.getById(id);
+    currentItem = fridge.Item.getById(id);
     document.getElementById("itemViewTitle").innerText = currentItem.name;
     document.getElementById("itemViewImg").src = "php/fridge/getImage.php?id=" + id + '&time=' + new Date().getTime();
 
-    Location.locations.forEach((location) => {
+    fridge.Location.locations.forEach((location) => {
       var numEntries = 0;
       currentItem.entries.forEach((entry) => {
         if (entry.locationId == location.id) {
@@ -100,8 +102,13 @@ class Item {
     this.id = dataRow.id;
     this.categoryId = dataRow.categoryId;
     this.name = dataRow.name;
+    this.sortName = dataRow.name.toUpperCase();
+    if (this.sortName.search("_") != -1) {
+      this.sortName = this.sortName.substr(this.sortName.search("_") + 1); 
+      this.viewName = this.viewName.replace("_", "");
+    }
 
-    this.domFrame = $('<div id="itemFrame_' + this.id + '" class="itemFrame " onClick="Item.show(' + this.id + ')"></div>');
+    this.domFrame = $('<div id="itemFrame_' + this.id + '" class="itemFrame " onClick="fridge.Item.show(' + this.id + ')"></div>');
     this.domNumTotal = $('<span id="itemNumTotal_' + this.id + '">0</span>');
     this.domImage = $('<img id="itemImg_' + this.id + '" class="itemImg itemGreyOut" src="php/fridge/getImage.php?id=' + this.id + '&time=' + new Date().getTime() + '" alt="' + this.name + '">');
 
@@ -121,7 +128,7 @@ class Item {
     this.numElements = 0;
     this.entries = [];
 
-    addContextMenu(this.domFrame[0], "item", this.id);
+    fridge.addContextMenu(this.domFrame[0], "item", this.id);
   }
   
   /// gets a entry by its id
@@ -141,7 +148,7 @@ class Item {
   updateOrAddEntry(dataRow) {
     var entry = this.getEntryById(dataRow.id);
     if(entry == null) {
-      this.entries.push(new Entry(dataRow));
+      this.entries.push(new fridge.Entry(dataRow));
     }
     else {
       entry.update(dataRow);
@@ -170,13 +177,18 @@ class Item {
     this.domItemLabel[0].innerText = newName;
     this.domImage[0].setAttribute("alt", newName);
     this.name = newName;
+    this.sortName = dataRow.name.toUpperCase();
+    if (this.sortName.search("_") != -1) {
+      this.sortName = this.sortName.substr(this.sortName.search("_") + 1); 
+      this.viewName = this.viewName.replace("_", "");
+    }
   }
 
   /// removes itself from the location
   remove() {
     this.domFrame[0].remove();
-    const index = Item.items.indexOf(this);
-    Item.items.splice(index, 1);
+    const index = fridge.Item.items.indexOf(this);
+    fridge.Item.items.splice(index, 1);
   }
 
   refreshImage() {

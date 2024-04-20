@@ -1,4 +1,6 @@
-class Location {
+var fridge = fridge || {};
+
+fridge.Location = class {
   /// array with all locations
   static locations = [];
 
@@ -6,7 +8,7 @@ class Location {
    * sort the locations
    */
   static sort() {
-    Location.locations.sort(function (a, b) {
+    fridge.Location.locations.sort(function (a, b) {
       if (a.name < b.name) {
         return -1;
       }
@@ -18,7 +20,7 @@ class Location {
 
     $("#locations").empty();
     $("#itemViewLocations").empty();
-    Location.locations.forEach((location) => {
+    fridge.Location.locations.forEach((location) => {
       $("#locations").append(location.domList);
       $("#itemViewLocations").append(location.domItemView);
     });
@@ -29,8 +31,8 @@ class Location {
    * @param {*} dataRow 
    */
   static addLocation(dataRow) {
-    if(Location.getById(dataRow.id) == null) {
-      Location.locations.push(new Location(dataRow));
+    if(fridge.Location.getById(dataRow.id) == null) {
+      fridge.Location.locations.push(new fridge.Location(dataRow));
     }
   }
 
@@ -40,9 +42,9 @@ class Location {
    * @returns the found item or null
    */
   static getById(id) {
-    for (var i = 0; i < Location.locations.length; i++) {
-      if (Location.locations[i].id == id) {
-        return Location.locations[i];
+    for (var i = 0; i < fridge.Location.locations.length; i++) {
+      if (fridge.Location.locations[i].id == id) {
+        return fridge.Location.locations[i];
       }
     }
     return null;
@@ -54,7 +56,7 @@ class Location {
    */
   static show(id) {
     // go through all items and check if they are located at the given location
-    Item.items.forEach((item) => {
+    fridge.Item.items.forEach((item) => {
       var numberOfItems = 0;
       // check all records for the location / item combination
       item.entries.forEach((entry) => {
@@ -89,7 +91,7 @@ class Location {
     this.domList = $(
       '<button id="location_' +
       this.id +
-      '"class="w3-bar-item w3-button" onClick="Location.show(' +
+      '"class="w3-bar-item w3-button" onClick="fridge.Location.show(' +
       this.id +
       ')">' +
       this.name +
@@ -114,7 +116,7 @@ class Location {
       ')">-</div>'
     );
 
-    addContextMenu(this.domList[0], "location", this.id);
+    fridge.addContextMenu(this.domList[0], "location", this.id);
   }
   
   // updates data of the location
@@ -129,7 +131,7 @@ class Location {
   remove() {
     this.domList[0].remove();
     this.domItemView[0].remove();
-    const index = Location.locations.indexOf(this);
-    Location.locations.splice(index, 1);
+    const index = fridge.Location.locations.indexOf(this);
+    fridge.Location.locations.splice(index, 1);
   }
 }

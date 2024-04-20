@@ -1,4 +1,6 @@
-class Category {
+var recipes = recipes || {};
+
+recipes.Category = class {
   /// array with all categories
   static categories = [];
 
@@ -6,7 +8,7 @@ class Category {
    * sort the categories
    */
   static sort() {
-    Category.categories.sort(function (a, b) {
+    recipes.Category.categories.sort(function (a, b) {
       if (a.name < b.name) {
         return -1;
       }
@@ -17,8 +19,8 @@ class Category {
     });
 
     $("#categories").empty();
-    DlgDish.reloadCategories();
-    Category.categories.forEach((category) => {
+    recipes.DlgDish.reloadCategories();
+    recipes.Category.categories.forEach((category) => {
       $("#categories").append(category.domButton);
     });
   }
@@ -28,8 +30,8 @@ class Category {
    * @param {*} dataRow 
    */
   static addCategory(dataRow) {
-    if (Category.getById(dataRow.id) == null) {
-      Category.categories.push(new Category(dataRow));
+    if (recipes.Category.getById(dataRow.id) == null) {
+      recipes.Category.categories.push(new recipes.Category(dataRow));
     }
   }
 
@@ -39,9 +41,9 @@ class Category {
    * @returns the found item or null
    */
   static getById(id) {
-    for (var i = 0; i < Category.categories.length; i++) {
-      if (Category.categories[i].id == id) {
-        return Category.categories[i];
+    for (var i = 0; i < recipes.Category.categories.length; i++) {
+      if (recipes.Category.categories[i].id == id) {
+        return recipes.Category.categories[i];
       }
     }
     return null;
@@ -53,7 +55,7 @@ class Category {
    */
   static show(id) {
     // go through all items and check if it should be shown
-    Dish.dishes.forEach((dish) => {
+    recipes.Dish.dishes.forEach((dish) => {
       if (dish.categoryId == id || id == -1) {
         dish.domFrame[0].classList.remove("hidden");
       } else {
@@ -62,11 +64,11 @@ class Category {
     });
 
     // highlight the button
-    if (lastFilterElement) {
-      lastFilterElement.classList.remove("w3-green");
+    if (recipes.lastFilterElement) {
+      recipes.lastFilterElement.classList.remove("w3-green");
     }
-    lastFilterElement = document.getElementById("category_" + id);
-    lastFilterElement.classList.add("w3-green");
+    recipes.lastFilterElement = document.getElementById("category_" + id);
+    recipes.lastFilterElement.classList.add("w3-green");
 
     document.getElementById("dishContainer").classList.remove("hidden");
     document.getElementById("dishView").classList.add("hidden");
@@ -91,14 +93,14 @@ class Category {
     this.domButton = $(
       '<button id="category_' +
       this.id +
-      '" class="w3-bar-item w3-button" onClick="Category.show(' +
+      '" class="w3-bar-item w3-button" onClick="recipes.Category.show(' +
       this.id +
       ')">' +
       this.name +
       "</button>"
     );
 
-    addContextMenu(this.domButton[0], "category", this.id);
+    recipes.addContextMenu(this.domButton[0], "category", this.id);
   }
 
   // updates data of the category
@@ -111,7 +113,7 @@ class Category {
   /// removes itself from the DOM
   remove() {
     this.domButton[0].remove();
-    const index = Category.categories.indexOf(this);
-    Category.categories.splice(index, 1);
+    const index = recipes.Category.categories.indexOf(this);
+    recipes.Category.categories.splice(index, 1);
   }
-}
+};
