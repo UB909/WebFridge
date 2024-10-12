@@ -56,12 +56,37 @@ class Fridge {
     return Location::loadFromSql($this->sqlSession);
   }
 
+  public function convertImg() {
+    $result = $this->sqlSession->query("SELECT id, image FROM items") or die("<b>Error:</b>");
+    while ($row = $result->fetch_array(MYSQLI_ASSOC)) {
+      $newImage = DatabaseItem::resizeImage($row["image"]);
+      print(strlen($row["image"]) . " -> " . strlen($newImage) . "\n");
+
+      $stmt = $this->sqlSession->prepare("UPDATE items SET image_size = " . strlen($newImage) . ", image = ? WHERE id = " . $row["id"]);
+      $stmt->bind_param("b", $null);
+      $stmt->send_long_data(0, $newImage);
+      $stmt->execute();
+    }
+    $result = $this->sqlSession->query("SELECT id, image FROM recipes_dishes") or die("<b>Error:</b>");
+    while ($row = $result->fetch_array(MYSQLI_ASSOC)) {
+      $newImage = DatabaseItem::resizeImage($row["image"]);
+      print(strlen($row["image"]) . " -> " . strlen($newImage) . "\n");
+
+      $stmt = $this->sqlSession->prepare("UPDATE recipes_dishes SET image_size = " . strlen($newImage) . ", image = ? WHERE id = " . $row["id"]);
+      $stmt->bind_param("b", $null);
+      $stmt->send_long_data(0, $newImage);
+      $stmt->execute();
+    }
+  }
+
   /// loads and outputs the item image
   public function getItemImage($id) {
     $result = $this->sqlSession->query("SELECT image, image_size FROM items WHERE id = $id") or die("<b>Error:</b> Problem loading $table.<br/>" . mysqli_error($conn));
     $row = mysqli_fetch_array($result);
+
     $type = 'image/jpeg';
     header('Content-Type:'.$type);
+    //echo($this->resizePng($row["image"]));
     header('Content-Length: ' . $row["image_size"]);
     echo($row["image"]);
   }
