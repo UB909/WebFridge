@@ -30,17 +30,21 @@ class Item extends NamedDatabaseItem {
     }
 
     $sqlSession->query("INSERT INTO items (name, category_id) VALUES ('".  $sqlSession->real_escape_string($name) . "', $categoryId)");
-    $lastId = $sqlSession->insert_id;
+    $id = $sqlSession->insert_id;
 
     if((strlen($image["type"]) > 5) && (strcasecmp(substr($image["type"], 0, 5), 'image') == 0)) {
       // Add to main table
-      $stmt = $sqlSession->prepare("UPDATE items SET image_size = " . $image["size"] . ", image = ? WHERE id =  $lastId");
-      $stmt->bind_param("b", $null);
       $fp = fopen($image["tmp_name"], "r");
+      $imageString = "";
       while (!feof($fp)) {
-        $stmt->send_long_data(0, fread($fp, 8192));
+        $imageString = $imageString . fread($fp, 8192);
       }
       fclose($fp);
+      $newImage = DatabaseItem::resizeImage($imageString);
+
+      $stmt = $sqlSession->prepare("UPDATE items SET image_size = " . strlen($newImage) . ", image = ? WHERE id =  $id");
+      $stmt->bind_param("b", $null);
+      $stmt->send_long_data(0, $newImage);
       $stmt->execute();
     }
     echo("OK");
@@ -63,14 +67,18 @@ class Item extends NamedDatabaseItem {
     $sqlSession->query("UPDATE items SET name = '".  $sqlSession->real_escape_string($name) . "', category_id = $categoryId WHERE id = $id");
     
     if((strlen($image["type"]) > 5) && (strcasecmp(substr($image["type"], 0, 5), 'image') == 0)) {
-      // Add to main table
-      $stmt = $sqlSession->prepare("UPDATE items SET image_size = " . $image["size"] . ", image = ? WHERE id =  $id");
-      $stmt->bind_param("b", $null);
+     // Add to main table
       $fp = fopen($image["tmp_name"], "r");
+      $imageString = "";
       while (!feof($fp)) {
-        $stmt->send_long_data(0, fread($fp, 8192));
+        $imageString = $imageString . fread($fp, 8192);
       }
       fclose($fp);
+      $newImage = DatabaseItem::resizeImage($imageString);
+
+      $stmt = $sqlSession->prepare("UPDATE items SET image_size = " . strlen($newImage) . ", image = ? WHERE id =  $id");
+      $stmt->bind_param("b", $null);
+      $stmt->send_long_data(0, $newImage);
       $stmt->execute();
     }
     echo("OK");
